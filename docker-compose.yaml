@@ -1,0 +1,10 @@
+version: '3'
+
+services:
+  znuny:
+    build:
+      context: .
+      dockerfile: ./znuny/Dockerfile
+    image: znuny:v6.5.3
+    container_name: znuny
+    hostname: znuny

@@ -1,0 +1,26 @@
+name: zcli
+help: Simple cli to manage the container of znuny
+version: 0.0.1
+
+# environment_variables:
+#   - name: api_key
+#     help: Set your API key
+
+commands:
+  - name: config
+    help: Manage the configuration of znuny
+    commands:
+      - name: gen
+        help: add users
+
+  - name: download
+    help: Download the znuny archive
+
+  - name: init
+    help: Initialize the container
+
+  - name: user
+    help: Manage users
+    commands:
+      - name: add
+        help: Add users
