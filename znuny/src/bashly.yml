@@ -2,22 +2,43 @@ name: zcli
 help: Simple cli to manage the container of znuny
 version: 0.0.1
 
-# environment_variables:
-#   - name: api_key
-#     help: Set your API key
+environment_variables:
+  - name: ZNUNY_DATABASE_TYPE
+    help: The database type (mysql, pgsql)
+  - name: ZNUNY_DATABASE_HOST
+    help: The database host
+  - name: ZNUNY_DATABASE_NAME
+    help: The database name
+  - name: ZNUNY_DATABASE_USER
+    help: The database user
+  - name: ZNUNY_DATABASE_PASSWORD
+    help: The database password
 
 commands:
   - name: config
     help: Manage the configuration of znuny
     commands:
-      - name: gen
-        help: add users
+      - name: apache
+        help: Create virtualhosts
+      - name: cron
+        help: Create all crons
+      - name: znuny
+        help: Create the main configuration file of Znuny
+
+  - name: check
+    help: Check some features or resources
+    commands:
+      - name: modules
+        help: Check Perl modules
 
   - name: download
     help: Download the znuny archive
 
   - name: init
     help: Initialize the container
+
+  - name: run
+    help: Run Znuny
 
   - name: user
     help: Manage users

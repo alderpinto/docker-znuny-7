@@ -1,6 +1,7 @@
-version: '3'
+version: "3"
 
 services:
+
   znuny:
     build:
       context: .
@@ -8,3 +9,14 @@ services:
     image: znuny:v6.5.3
     container_name: znuny
     hostname: znuny
+    env_file:
+      - ./env.example.ini
+    ports:
+      - 8080:80
+
+  mariadb:
+    image: mariadb:11
+    container_name: mariadb
+    hostname: mariadb
+    env_file:
+      - ./env.example.ini

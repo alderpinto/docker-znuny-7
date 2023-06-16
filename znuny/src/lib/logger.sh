@@ -1,9 +1,10 @@
-customLogger() {
+function customLogger() {
   TIMESTAMP=$(date +'%Y-%m-%d %H:%M:%S')
   LEVEL=${1}
-  MESSAGE=${2}
+  SOURCE=${2}
+  MESSAGE=${3}
 
-  cat << EOF | jq
-{"timestamp": "${TIMESTAMP}","level": "${LEVEL}","message": "${MESSAGE}"}
+  cat << EOF
+{"timestamp": "${TIMESTAMP}","level": "${LEVEL}","source": "${SOURCE}","message": "${MESSAGE}"}
 EOF
 }

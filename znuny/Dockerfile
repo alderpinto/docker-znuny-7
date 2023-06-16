@@ -1,6 +1,5 @@
 FROM debian:stable-20230612-slim
 
-
 WORKDIR /opt/otrs
 
 RUN apt-get update && apt-get install -y \
@@ -8,6 +7,7 @@ RUN apt-get update && apt-get install -y \
   curl \
   jq \
   apache2 \
+  cron \
   cpanminus \
   libapache2-mod-perl2 \
   libdbd-mysql-perl \
@@ -39,16 +39,22 @@ RUN apt-get update && apt-get install -y \
   libhash-merge-perl \
   libical-parser-perl \
   libspreadsheet-xlsx-perl \
+  libdata-uuid-perl \
+  libdbd-odbc-perl \
+  libdbd-pg-perl \
+  libcpan-audit-perl \
   libcrypt-jwt-perl \
   libcrypt-openssl-x509-perl \
   && apt-get clean all
 
-# cpanm install Jq
+RUN cpanm install Jq
 
+# RUN wget https://packages.debian.org/source/bullseye/libdbd-oracle-perl -O /tmp/libdbd-oracle-perl \
+#   && dpkg -i /tmp/libdbd-oracle-perl
 
-COPY ./znuny/tmpl /etc/zcli/tmpl
 COPY ./znuny/zcli.ini /etc/zcli/zcli.ini
 COPY ./znuny/zcli /usr/bin/zcli
 
+EXPOSE 80
 
 ENTRYPOINT [ "zcli", "init" ]
