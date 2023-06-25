@@ -55,6 +55,7 @@ function gen_add_database_credentials() {
   HOST=${1}
   NAME=${2}
   USER=${3}
+  PASSWORD=${4}
 
   CONTENT=$(cat << EOF | tee -a ${CONFIG_PATH}
     # ---------------------------------------------------- #
@@ -70,17 +71,6 @@ function gen_add_database_credentials() {
     # The database user
     \$Self->{DatabaseUser} = '${USER}';
 
-    return 1;
-}
-use parent qw(Kernel::Config::Defaults);
-1;
-EOF
-)
-
-  PASSWORD=$(su -c "/opt/otrs/bin/otrs.Console.pl Maint::Database::PasswordCrypt --password=${4}" -s /bin/bash otrs | awk -F '[{}]' '{print $2}' | tail -n1)
-  sed -i -e :a -e '$d;N;2,4ba' -e 'P;D' ${CONFIG_PATH}
-
-  CONTENT=$(cat << EOF | tee -a ${CONFIG_PATH}
     # The password of database user. You also can use bin/otrs.Console.pl Maint::Database::PasswordCrypt
     # for crypted passwords
     \$Self->{DatabasePw} = '${PASSWORD}';
@@ -91,8 +81,8 @@ EOF
 
 function gen_add_database_mysql() {
   CONTENT=$(cat << EOF | tee -a ${CONFIG_PATH}
-     # The database DSN for MySQL ==> more: "perldoc DBD::mysql"
-     \$Self->{DatabaseDSN} = "DBI:mysql:database=$Self->{Database};host=$Self->{DatabaseHost};";
+    # The database DSN for MySQL ==> more: "perldoc DBD::mysql"
+    \$Self->{DatabaseDSN} = "DBI:mysql:database=\$Self->{Database};host=\$Self->{DatabaseHost};";
 
 EOF
 )
@@ -102,36 +92,11 @@ function gen_add_database_postgresql() {
   CONTENT=$(cat << EOF | tee -a ${CONFIG_PATH}
     # The database DSN for PostgreSQL ==> more: "perldoc DBD::Pg"
     # if you want to use a TCP/IP connection
-    \$Self->{DatabaseDSN} = "DBI:Pg:dbname=$Self->{Database};host=$Self->{DatabaseHost};";
+    \$Self->{DatabaseDSN} = "DBI:Pg:dbname=\$Self->{Database};host=\$Self->{DatabaseHost};";
 
 EOF
 )
 }
-
-function gen_add_database_microsoftsql() {
-  CONTENT=$(cat << EOF | tee -a ${CONFIG_PATH}
-    # The database DSN for Microsoft SQL Server - only supported if OTRS is
-    # installed on Windows as well
-    \$Self->{DatabaseDSN} = "DBI:ODBC:driver={SQL Server};Database=$Self->{Database};Server=$Self->{DatabaseHost},1433";
-
-EOF
-)
-}
-
-function gen_add_database_oracle() {
-  CONTENT=$(cat << EOF | tee -a ${CONFIG_PATH}
-    # The database DSN for Oracle ==> more: "perldoc DBD::oracle"
-    \$Self->{DatabaseDSN} = "DBI:Oracle://$Self->{DatabaseHost}:1521/$Self->{Database}";
-
-EOF
-)
-}
-
-# #
-# #    $ENV{ORACLE_HOME}     = '/path/to/your/oracle';
-# #    $ENV{NLS_DATE_FORMAT} = 'YYYY-MM-DD HH24:MI:SS';
-# #    $ENV{NLS_LANG}        = 'AMERICAN_AMERICA.AL32UTF8';
-
 
 function gen_add_fs_root_dir() {
   CONTENT=$(cat << EOF | tee -a ${CONFIG_PATH}
@@ -144,17 +109,30 @@ EOF
 )
 }
 
-#     # ---------------------------------------------------- #
-#     # insert your own config settings "here"               #
-#     # config settings taken from Kernel/Config/Defaults.pm #
-#     # ---------------------------------------------------- #
-#     # $Self->{SessionUseCookie} = 0;
-#     # $Self->{CheckMXRecord} = 0;
-#
-#     # ---------------------------------------------------- #
-#     # data inserted by installer                           #
-#     # ---------------------------------------------------- #
-#     # $DIBI$
+function gen_add_mailing_sendmail() {
+  CONTENT=$(cat << EOF | tee -a ${CONFIG_PATH}
+    \$Self->{'SendmailModule'}      = 'Kernel::System::Email::Sendmail';
+    \$Self->{'SendmailModule::CMD'} = '/usr/sbin/sendmail -i -f';
+
+EOF
+)
+}
+
+function gen_add_mailing_smtp() {
+  HOST=${1}
+  PORT=${2}
+  USER=${3}
+  PASSWORD=${4}
+  CONTENT=$(cat << EOF | tee -a ${CONFIG_PATH}
+    \$Self->{'SendmailModule'} = 'Kernel::System::Email::SMTP';
+    \$Self->{'SendmailModule::Host'} = '${ZNUNY_MAILING_HOST}';
+    \$Self->{'SendmailModule::Port'} = '${ZNUNY_MAILING_PORT}';
+    \$Self->{'SendmailModule::AuthUser'} = '${ZNUNY_MAILING_USER}';
+    \$Self->{'SendmailModule::AuthPassword'} = '${ZNUNY_MAILING_PASSWORD}';
+
+EOF
+)
+}
 
 function gen_add_return() {
   CONTENT=$(cat << EOF | tee -a ${CONFIG_PATH}
@@ -187,3 +165,21 @@ function gen_add_end() {
 EOF
 )
 }
+
+# #
+# #    $ENV{ORACLE_HOME}     = '/path/to/your/oracle';
+# #    $ENV{NLS_DATE_FORMAT} = 'YYYY-MM-DD HH24:MI:SS';
+# #    $ENV{NLS_LANG}        = 'AMERICAN_AMERICA.AL32UTF8';
+#     # ---------------------------------------------------- #
+#     # insert your own config settings "here"               #
+#     # config settings taken from Kernel/Config/Defaults.pm #
+#     # ---------------------------------------------------- #
+#     # $Self->{SessionUseCookie} = 0;
+#     # $Self->{CheckMXRecord} = 0;
+#
+#     # ---------------------------------------------------- #
+#     # data inserted by installer                           #
+#     # ---------------------------------------------------- #
+#     # $DIBI$
+
+

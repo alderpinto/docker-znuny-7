@@ -1,6 +1,7 @@
 CONFIG_PATH="/opt/otrs/Kernel/Config.pm"
 
-set_env
+set_env_database
+set_env_mailing
 
 customLogger "info" "config_znuny" "Check if the config file already exists"
 if [[ -f "${CONFIG_PATH}" ]]; then
@@ -34,16 +35,20 @@ case ${ZNUNY_DATABASE_TYPE} in
   "pgsql")
     gen_add_database_postgresql
     ;;
-  "mssql")
-    gen_add_database_microsoftsql
-    ;;
-  "oracle")
-    gen_add_database_oracle
-    ;;
 esac
 
 customLogger "info" "config_znuny" "Generate the filesystem root directory"
 gen_add_fs_root_dir
+
+customLogger "info" "config_znuny" "Generate mailing configurations"
+case ${ZNUNY_MAILING_TYPE} in
+  "internal")
+    gen_add_mailing_sendmail 
+    ;;
+  "external")
+    gen_add_mailing_smtp ${ZNUNY_MAILING_HOST} ${ZNUNY_MAILING_PORT} ${ZNUNY_MAILING_USER} ${ZNUNY_MAILING_PASSWORD}
+    ;;
+esac
 
 customLogger "info" "config_znuny" "Generate the configuration return"
 gen_add_return

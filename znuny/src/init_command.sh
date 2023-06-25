@@ -1,14 +1,23 @@
 zcli download
 
-zcli config znuny
+zcli user system
 
-zcli config cron
+zcli config znuny
 
 zcli config apache
 
-zcli user add
+zcli config crons
+
+zcli user permissions
+
+zcli config database
 
 zcli check modules
 
-# sleep 1000000
+zcli check config
+
+zcli user admin
+
 zcli run
+
+sleep 1000000

@@ -1,5 +1,12 @@
 version: "3"
 
+# networks:
+#   net:
+#     driver: bridge
+#     ipam:
+#       config:
+#         - subnet: 172.30.0.0/24
+
 services:
 
   znuny:
@@ -11,8 +18,13 @@ services:
     hostname: znuny
     env_file:
       - ./env.example.ini
+    # networks:
+    #   net:
+    #     ipv4_address: 172.30.0.11
     ports:
       - 8080:80
+    depends_on:
+      - mariadb
 
   mariadb:
     image: mariadb:11
@@ -20,3 +32,8 @@ services:
     hostname: mariadb
     env_file:
       - ./env.example.ini
+    # networks:
+    #   net:
+    #     ipv4_address: 172.30.0.12
+    ports:
+      - 3306:3306

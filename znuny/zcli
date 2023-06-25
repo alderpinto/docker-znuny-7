@@ -82,6 +82,61 @@ zcli_usage() {
     printf "    The database password\n"
     echo
 
+    # :environment_variable.usage
+    printf "  %s\n" "ZNUNY_USER_ADMIN_NAME"
+    printf "    The admin user name\n"
+    echo
+
+    # :environment_variable.usage
+    printf "  %s\n" "ZNUNY_USER_ADMIN_PASSWORD"
+    printf "    The admin user password\n"
+    echo
+
+    # :environment_variable.usage
+    printf "  %s\n" "ZNUNY_APACHE_REWRITE_RULE_1"
+    printf "    A custom rewrite rule\n"
+    echo
+
+    # :environment_variable.usage
+    printf "  %s\n" "ZNUNY_APACHE_REWRITE_RULE_2"
+    printf "    A custom rewrite rule\n"
+    echo
+
+    # :environment_variable.usage
+    printf "  %s\n" "ZNUNY_APACHE_REWRITE_RULE_3"
+    printf "    A custom rewrite rule\n"
+    echo
+
+    # :environment_variable.usage
+    printf "  %s\n" "ZNUNY_APACHE_REWRITE_RULE_4"
+    printf "    A custom rewrite rule\n"
+    echo
+
+    # :environment_variable.usage
+    printf "  %s\n" "ZNUNY_APACHE_REWRITE_RULE_5"
+    printf "    A custom rewrite rule\n"
+    echo
+
+    # :environment_variable.usage
+    printf "  %s\n" "ZNUNY_APACHE_REWRITE_RULE_6"
+    printf "    A custom rewrite rule\n"
+    echo
+
+    # :environment_variable.usage
+    printf "  %s\n" "ZNUNY_APACHE_REWRITE_RULE_7"
+    printf "    A custom rewrite rule\n"
+    echo
+
+    # :environment_variable.usage
+    printf "  %s\n" "ZNUNY_APACHE_REWRITE_RULE_8"
+    printf "    A custom rewrite rule\n"
+    echo
+
+    # :environment_variable.usage
+    printf "  %s\n" "ZNUNY_APACHE_REWRITE_RULE_9"
+    printf "    A custom rewrite rule\n"
+    echo
+
   fi
 }
 
@@ -103,9 +158,12 @@ zcli_config_usage() {
   echo
   # :command.usage_commands
   printf "%s\n" "Commands:"
-  printf "  %s   Create virtualhosts\n" "apache"
-  printf "  %s   Create all crons\n" "cron  "
-  printf "  %s   Create the main configuration file of Znuny\n" "znuny "
+  printf "  %s   Create virtualhosts\n" "apache   "
+  printf "  %s   Create all crons\n" "crons    "
+  printf "  %s   Create customers authentications\n" "customers"
+  printf "  %s   Initialize the database\n" "database "
+  printf "  %s   Create operators authentications\n" "operators"
+  printf "  %s   Create the main configuration file of Znuny\n" "znuny    "
   echo
 
   # :command.long_usage
@@ -150,20 +208,107 @@ zcli_config_apache_usage() {
 }
 
 # :command.usage
-zcli_config_cron_usage() {
+zcli_config_crons_usage() {
   if [[ -n $long_usage ]]; then
-    printf "zcli config cron - Create all crons\n"
+    printf "zcli config crons - Create all crons\n"
     echo
 
   else
-    printf "zcli config cron - Create all crons\n"
+    printf "zcli config crons - Create all crons\n"
     echo
 
   fi
 
   printf "%s\n" "Usage:"
-  printf "  zcli config cron\n"
-  printf "  zcli config cron --help | -h\n"
+  printf "  zcli config crons\n"
+  printf "  zcli config crons --help | -h\n"
+  echo
+
+  # :command.long_usage
+  if [[ -n $long_usage ]]; then
+    printf "%s\n" "Options:"
+
+    # :command.usage_fixed_flags
+    printf "  %s\n" "--help, -h"
+    printf "    Show this help\n"
+    echo
+
+  fi
+}
+
+# :command.usage
+zcli_config_customers_usage() {
+  if [[ -n $long_usage ]]; then
+    printf "zcli config customers - Create customers authentications\n"
+    echo
+
+  else
+    printf "zcli config customers - Create customers authentications\n"
+    echo
+
+  fi
+
+  printf "%s\n" "Usage:"
+  printf "  zcli config customers\n"
+  printf "  zcli config customers --help | -h\n"
+  echo
+
+  # :command.long_usage
+  if [[ -n $long_usage ]]; then
+    printf "%s\n" "Options:"
+
+    # :command.usage_fixed_flags
+    printf "  %s\n" "--help, -h"
+    printf "    Show this help\n"
+    echo
+
+  fi
+}
+
+# :command.usage
+zcli_config_database_usage() {
+  if [[ -n $long_usage ]]; then
+    printf "zcli config database - Initialize the database\n"
+    echo
+
+  else
+    printf "zcli config database - Initialize the database\n"
+    echo
+
+  fi
+
+  printf "%s\n" "Usage:"
+  printf "  zcli config database\n"
+  printf "  zcli config database --help | -h\n"
+  echo
+
+  # :command.long_usage
+  if [[ -n $long_usage ]]; then
+    printf "%s\n" "Options:"
+
+    # :command.usage_fixed_flags
+    printf "  %s\n" "--help, -h"
+    printf "    Show this help\n"
+    echo
+
+  fi
+}
+
+# :command.usage
+zcli_config_operators_usage() {
+  if [[ -n $long_usage ]]; then
+    printf "zcli config operators - Create operators authentications\n"
+    echo
+
+  else
+    printf "zcli config operators - Create operators authentications\n"
+    echo
+
+  fi
+
+  printf "%s\n" "Usage:"
+  printf "  zcli config operators\n"
+  printf "  zcli config operators --help | -h\n"
   echo
 
   # :command.long_usage
@@ -226,6 +371,7 @@ zcli_check_usage() {
   # :command.usage_commands
   printf "%s\n" "Commands:"
   printf "  %s   Check Perl modules\n" "modules"
+  printf "  %s   Check the built configuration in database\n" "config "
   echo
 
   # :command.long_usage
@@ -255,6 +401,35 @@ zcli_check_modules_usage() {
   printf "%s\n" "Usage:"
   printf "  zcli check modules\n"
   printf "  zcli check modules --help | -h\n"
+  echo
+
+  # :command.long_usage
+  if [[ -n $long_usage ]]; then
+    printf "%s\n" "Options:"
+
+    # :command.usage_fixed_flags
+    printf "  %s\n" "--help, -h"
+    printf "    Show this help\n"
+    echo
+
+  fi
+}
+
+# :command.usage
+zcli_check_config_usage() {
+  if [[ -n $long_usage ]]; then
+    printf "zcli check config - Check the built configuration in database\n"
+    echo
+
+  else
+    printf "zcli check config - Check the built configuration in database\n"
+    echo
+
+  fi
+
+  printf "%s\n" "Usage:"
+  printf "  zcli check config\n"
+  printf "  zcli check config --help | -h\n"
   echo
 
   # :command.long_usage
@@ -374,7 +549,9 @@ zcli_user_usage() {
   echo
   # :command.usage_commands
   printf "%s\n" "Commands:"
-  printf "  %s   Add users\n" "add"
+  printf "  %s   Create the admin user\n" "admin      "
+  printf "  %s   Set the user permissions\n" "permissions"
+  printf "  %s   Create the system user\n" "system     "
   echo
 
   # :command.long_usage
@@ -390,20 +567,78 @@ zcli_user_usage() {
 }
 
 # :command.usage
-zcli_user_add_usage() {
+zcli_user_admin_usage() {
   if [[ -n $long_usage ]]; then
-    printf "zcli user add - Add users\n"
+    printf "zcli user admin - Create the admin user\n"
     echo
 
   else
-    printf "zcli user add - Add users\n"
+    printf "zcli user admin - Create the admin user\n"
     echo
 
   fi
 
   printf "%s\n" "Usage:"
-  printf "  zcli user add\n"
-  printf "  zcli user add --help | -h\n"
+  printf "  zcli user admin\n"
+  printf "  zcli user admin --help | -h\n"
+  echo
+
+  # :command.long_usage
+  if [[ -n $long_usage ]]; then
+    printf "%s\n" "Options:"
+
+    # :command.usage_fixed_flags
+    printf "  %s\n" "--help, -h"
+    printf "    Show this help\n"
+    echo
+
+  fi
+}
+
+# :command.usage
+zcli_user_permissions_usage() {
+  if [[ -n $long_usage ]]; then
+    printf "zcli user permissions - Set the user permissions\n"
+    echo
+
+  else
+    printf "zcli user permissions - Set the user permissions\n"
+    echo
+
+  fi
+
+  printf "%s\n" "Usage:"
+  printf "  zcli user permissions\n"
+  printf "  zcli user permissions --help | -h\n"
+  echo
+
+  # :command.long_usage
+  if [[ -n $long_usage ]]; then
+    printf "%s\n" "Options:"
+
+    # :command.usage_fixed_flags
+    printf "  %s\n" "--help, -h"
+    printf "    Show this help\n"
+    echo
+
+  fi
+}
+
+# :command.usage
+zcli_user_system_usage() {
+  if [[ -n $long_usage ]]; then
+    printf "zcli user system - Create the system user\n"
+    echo
+
+  else
+    printf "zcli user system - Create the system user\n"
+    echo
+
+  fi
+
+  printf "%s\n" "Usage:"
+  printf "  zcli user system\n"
+  printf "  zcli user system --help | -h\n"
   echo
 
   # :command.long_usage
@@ -567,10 +802,48 @@ config_has_key() {
   [[ $(config_get "$1") ]]
 }
 
-# src/lib/env.sh
-# [ -z ${ZNUNY_DB_HOST} ] && export ZNUNY_DB_HOST="znuny-db"
+# src/lib/database.sh
+function database_check_mysql() {
+  HOST=${1}
+  NAME=${2}
+  USER=${3}
+  PASSWORD=${4}
 
-function set_env() {
+  RESULT=$(mysql -h${HOST} -u${USER} -p${PASSWORD} ${NAME} \
+    -e "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = '${NAME}';" 2>/dev/null | grep -Eo '[0-9]+')
+
+  if [[ "${RESULT}" != "0" ]]; then
+    return 0 # Database already initialize
+  else
+    return 1 # Database not initialize
+  fi
+}
+
+function database_init_mysql() {
+  HOST=${1}
+  NAME=${2}
+  USER=${3}
+  PASSWORD=${4}
+
+  # echo -e "mysql -h${HOST} -u${USER} -p${PASSWORD} -D ${NAME}"
+
+  mysql -h ${HOST} -u ${USER} -p${PASSWORD} -D ${NAME} < /opt/otrs/scripts/database/schema.mysql.sql
+  sleep 1
+  mysql -h${HOST} -u${USER} -p${PASSWORD} -D ${NAME} < /opt/otrs/scripts/database/initial_insert.mysql.sql
+  sleep 1
+  mysql -h${HOST} -u${USER} -p${PASSWORD} -D ${NAME} < /opt/otrs/scripts/database/schema-post.mysql.sql
+}
+
+function database_init_pgsql() {
+  HOST=${1}
+  NAME=${2}
+  USER=${3}
+  PASSWORD=${4}
+
+}
+
+# src/lib/env.sh
+function set_env_database() {
   if [[ -z ${ZNUNY_DATABASE_HOST} ]]; then
     customLogger "error" "env" "Failed to load the environment variable ZNUNY_DATABASE_HOST"
     exit 1
@@ -592,7 +865,60 @@ function set_env() {
   fi
 }
 
+function set_env_znuny() {
+  if [[ -z ${ZNUNY_USER_ADMIN_NAME} ]]; then
+    customLogger "error" "env" "Failed to load the environment variable ZNUNY_USER_ADMIN_NAME"
+    exit 1
+  fi
+
+  if [[ -z ${ZNUNY_USER_ADMIN_PASSWORD} ]]; then
+    customLogger "error" "env" "Failed to load the environment variable ZNUNY_USER_ADMIN_PASSWORD"
+    exit 1
+  fi
+}
+
+function set_env_mailing() {
+  if [[ -z ${ZNUNY_MAILING_TYPE} ]]; then
+    customLogger "warn" "env" "Failed to load the environment variable ZNUNY_MAILING_TYPE. It will be define to 'internal'"
+    ZNUNY_MAILING_TYPE="internal"
+  fi
+
+  if [[ ${ZNUNY_MAILING_TYPE} == "external" ]]; then
+    if [[ -z ${ZNUNY_MAILING_HOST} ]]; then
+      customLogger "error" "env" "Failed to load the environment variable ZNUNY_MAILING_HOST"
+      exit 1
+    fi
+
+    if [[ -z ${ZNUNY_MAILING_PORT} ]]; then
+      customLogger "error" "env" "Failed to load the environment variable ZNUNY_MAILING_PORT "
+      exit 1
+    fi
+
+    if [[ -z ${ZNUNY_MAILING_USER} ]]; then
+      customLogger "error" "env" "Failed to load the environment variable ZNUNY_MAILING_USER "
+      exit 1
+    fi
+
+    if [[ -z ${ZNUNY_MAILING_PASSWORD} ]]; then
+      customLogger "error" "env" "Failed to load the environment variable ZNUNY_MAILING_PASSWORD"
+      exit 1
+    fi
+  fi
+}
+
 # src/lib/logger.sh
+ #  _____                _                 ______
+
+ # |  __ \              | |               |___  /
+
+ # | |  | |  ___    ___ | | __ ___  _ __     / /  _ __   _   _  _ __   _   _
+
+ # | |  | | / _ \  / __|| |/ // _ \| '__|   / /  | '_ \ | | | || '_ \ | | | |
+ # | |__| || (_) || (__ |   <|  __/| |     / /__ | | | || |_| || | | || |_| |
+ # |_____/  \___/  \___||_|\_\\___||_|    /_____||_| |_| \__,_||_| |_| \__, |
+ #                                                                      __/ |
+ #                                                                     |___/
+
 function customLogger() {
   TIMESTAMP=$(date +'%Y-%m-%d %H:%M:%S')
   LEVEL=${1}
@@ -685,6 +1011,7 @@ function gen_add_database_credentials() {
   HOST=${1}
   NAME=${2}
   USER=${3}
+  PASSWORD=${4}
 
   CONTENT=$(cat << EOF | tee -a ${CONFIG_PATH}
     # ---------------------------------------------------- #
@@ -700,17 +1027,6 @@ function gen_add_database_credentials() {
     # The database user
     \$Self->{DatabaseUser} = '${USER}';
 
-    return 1;
-}
-use parent qw(Kernel::Config::Defaults);
-1;
-EOF
-)
-
-  PASSWORD=$(su -c "/opt/otrs/bin/otrs.Console.pl Maint::Database::PasswordCrypt --password=${4}" -s /bin/bash otrs | awk -F '[{}]' '{print $2}' | tail -n1)
-  sed -i -e :a -e '$d;N;2,4ba' -e 'P;D' ${CONFIG_PATH}
-
-  CONTENT=$(cat << EOF | tee -a ${CONFIG_PATH}
     # The password of database user. You also can use bin/otrs.Console.pl Maint::Database::PasswordCrypt
     # for crypted passwords
     \$Self->{DatabasePw} = '${PASSWORD}';
@@ -721,8 +1037,8 @@ EOF
 
 function gen_add_database_mysql() {
   CONTENT=$(cat << EOF | tee -a ${CONFIG_PATH}
-     # The database DSN for MySQL ==> more: "perldoc DBD::mysql"
-     \$Self->{DatabaseDSN} = "DBI:mysql:database=$Self->{Database};host=$Self->{DatabaseHost};";
+    # The database DSN for MySQL ==> more: "perldoc DBD::mysql"
+    \$Self->{DatabaseDSN} = "DBI:mysql:database=\$Self->{Database};host=\$Self->{DatabaseHost};";
 
 EOF
 )
@@ -732,35 +1048,11 @@ function gen_add_database_postgresql() {
   CONTENT=$(cat << EOF | tee -a ${CONFIG_PATH}
     # The database DSN for PostgreSQL ==> more: "perldoc DBD::Pg"
     # if you want to use a TCP/IP connection
-    \$Self->{DatabaseDSN} = "DBI:Pg:dbname=$Self->{Database};host=$Self->{DatabaseHost};";
+    \$Self->{DatabaseDSN} = "DBI:Pg:dbname=\$Self->{Database};host=\$Self->{DatabaseHost};";
 
 EOF
 )
 }
-
-function gen_add_database_microsoftsql() {
-  CONTENT=$(cat << EOF | tee -a ${CONFIG_PATH}
-    # The database DSN for Microsoft SQL Server - only supported if OTRS is
-    # installed on Windows as well
-    \$Self->{DatabaseDSN} = "DBI:ODBC:driver={SQL Server};Database=$Self->{Database};Server=$Self->{DatabaseHost},1433";
-
-EOF
-)
-}
-
-function gen_add_database_oracle() {
-  CONTENT=$(cat << EOF | tee -a ${CONFIG_PATH}
-    # The database DSN for Oracle ==> more: "perldoc DBD::oracle"
-    \$Self->{DatabaseDSN} = "DBI:Oracle://$Self->{DatabaseHost}:1521/$Self->{Database}";
-
-EOF
-)
-}
-
-# #
-# #    $ENV{ORACLE_HOME}     = '/path/to/your/oracle';
-# #    $ENV{NLS_DATE_FORMAT} = 'YYYY-MM-DD HH24:MI:SS';
-# #    $ENV{NLS_LANG}        = 'AMERICAN_AMERICA.AL32UTF8';
 
 function gen_add_fs_root_dir() {
   CONTENT=$(cat << EOF | tee -a ${CONFIG_PATH}
@@ -773,17 +1065,30 @@ EOF
 )
 }
 
-#     # ---------------------------------------------------- #
-#     # insert your own config settings "here"               #
-#     # config settings taken from Kernel/Config/Defaults.pm #
-#     # ---------------------------------------------------- #
-#     # $Self->{SessionUseCookie} = 0;
-#     # $Self->{CheckMXRecord} = 0;
-#
-#     # ---------------------------------------------------- #
-#     # data inserted by installer                           #
-#     # ---------------------------------------------------- #
-#     # $DIBI$
+function gen_add_mailing_sendmail() {
+  CONTENT=$(cat << EOF | tee -a ${CONFIG_PATH}
+    \$Self->{'SendmailModule'}      = 'Kernel::System::Email::Sendmail';
+    \$Self->{'SendmailModule::CMD'} = '/usr/sbin/sendmail -i -f';
+
+EOF
+)
+}
+
+function gen_add_mailing_smtp() {
+  HOST=${1}
+  PORT=${2}
+  USER=${3}
+  PASSWORD=${4}
+  CONTENT=$(cat << EOF | tee -a ${CONFIG_PATH}
+    \$Self->{'SendmailModule'} = 'Kernel::System::Email::SMTP';
+    \$Self->{'SendmailModule::Host'} = '${ZNUNY_MAILING_HOST}';
+    \$Self->{'SendmailModule::Port'} = '${ZNUNY_MAILING_PORT}';
+    \$Self->{'SendmailModule::AuthUser'} = '${ZNUNY_MAILING_USER}';
+    \$Self->{'SendmailModule::AuthPassword'} = '${ZNUNY_MAILING_PASSWORD}';
+
+EOF
+)
+}
 
 function gen_add_return() {
   CONTENT=$(cat << EOF | tee -a ${CONFIG_PATH}
@@ -817,34 +1122,120 @@ EOF
 )
 }
 
+# #
+# #    $ENV{ORACLE_HOME}     = '/path/to/your/oracle';
+# #    $ENV{NLS_DATE_FORMAT} = 'YYYY-MM-DD HH24:MI:SS';
+# #    $ENV{NLS_LANG}        = 'AMERICAN_AMERICA.AL32UTF8';
+#     # ---------------------------------------------------- #
+#     # insert your own config settings "here"               #
+#     # config settings taken from Kernel/Config/Defaults.pm #
+#     # ---------------------------------------------------- #
+#     # $Self->{SessionUseCookie} = 0;
+#     # $Self->{CheckMXRecord} = 0;
+#
+#     # ---------------------------------------------------- #
+#     # data inserted by installer                           #
+#     # ---------------------------------------------------- #
+#     # $DIBI$
+
 # :command.command_functions
 
 # :command.function
 zcli_config_apache_command() {
   # src/config_apache_command.sh
+  set_env_znuny
+
   customLogger "info" "config_apache" "Create the virtualhost to expose Znuny"
-  ln -s /opt/otrs/scripts/apache2-httpd.include.conf /etc/apache2/conf-available/zzz_znuny.conf
+  ln -s /opt/otrs/scripts/apache2-httpd.include.conf /etc/apache2/conf-available/zzz_znuny.conf || true
+
+  customLogger "info" "config_apache" "Enable the rewrite engine"
+  for i in {1..9}; do
+    COMPOSED_VAR="ZNUNY_APACHE_REWRITE_RULE_${i}"
+    if [[ ! -z ${!COMPOSED_VAR} ]]; then
+      echo -e "\n###\n#Add custom rewrite rules\n###" >> /etc/apache2/conf-available/zzz_znuny.conf
+      echo "<IfModule mod_rewrite.c>" >> /etc/apache2/conf-available/zzz_znuny.conf
+      echo "    RewriteEngine on" >> /etc/apache2/conf-available/zzz_znuny.conf
+      echo "</IfModule>" >> /etc/apache2/conf-available/zzz_znuny.conf
+      echo -e "\n" >> /etc/apache2/conf-available/zzz_znuny.conf
+      break
+    fi
+  done
+
+  customLogger "info" "config_apache" "Add the rewrite rules"
+  for i in {9..1}; do
+    COMPOSED_VAR="ZNUNY_APACHE_REWRITE_RULE_${i}"
+    if [[ ! -z ${!COMPOSED_VAR} ]]; then
+      sed -i '/RewriteEngine on/a\ \ \ \ \ \ \ \ '"${!COMPOSED_VAR}"'' /etc/apache2/conf-available/zzz_znuny.conf
+    fi
+  done
+
+  customLogger "info" "config_apache" "Enable required Apache modules - Part 1"
+  a2enmod perl headers deflate filter cgi 2>&1>/dev/null
 
   customLogger "info" "config_apache" "Disable useless Apache modules"
-  a2dismod mpm_event
+  a2dismod mpm_event 2>&1>/dev/null
 
-  customLogger "info" "config_apache" "Enable required Apache modules"
-  a2enmod perl headers deflate filter cgi mpm_prefork
+  customLogger "info" "config_apache" "Enable required Apache modules - Part 2"
+  a2enmod mpm_prefork 2>&1>/dev/null
 
   customLogger "info" "config_apache" "Enable the virtualhost to expose Znuny"
-  a2enconf zzz_znuny
+  a2enconf zzz_znuny 2>&1>/dev/null
 
 }
 
 # :command.function
-zcli_config_cron_command() {
-  # src/config_cron_command.sh
+zcli_config_crons_command() {
+  # src/config_crons_command.sh
   CRONS_PATH="/opt/otrs/var/cron"
 
   customLogger "info" "config_cron" "Create crons"
-  for CRON in $(${CRONS_PATH}/*.dist); do
+  for CRON in $(ls ${CRONS_PATH}/*.dist); do
     cp ${CRON} $(basename $foo .dist)
   done
+
+}
+
+# :command.function
+zcli_config_customers_command() {
+  # src/config_customers_command.sh
+  echo "# this file is located in 'src/config_customers_command.sh'"
+  echo "# code for 'zcli config customers' goes here"
+  echo "# you can edit it freely and regenerate (it will not be overwritten)"
+  inspect_args
+
+}
+
+# :command.function
+zcli_config_database_command() {
+  # src/config_database_command.sh
+  sleep 30
+
+  case ${ZNUNY_DATABASE_TYPE} in
+    "mysql")
+      if database_check_mysql "${ZNUNY_DATABASE_HOST}" "${ZNUNY_DATABASE_NAME}" "${ZNUNY_DATABASE_USER}" "${ZNUNY_DATABASE_PASSWORD}"; then
+        customLogger "warn" "config_database" "SKIP: The database is not empty"
+      else
+        customLogger "info" "config_database" "Initialize the database schemas"
+        database_init_mysql "${ZNUNY_DATABASE_HOST}" "${ZNUNY_DATABASE_NAME}" "${ZNUNY_DATABASE_USER}" "${ZNUNY_DATABASE_PASSWORD}"
+      fi
+    ;;
+    "pgsql")
+      gen_add_database_postgresql
+    ;;
+    *)
+      customLogger "error" "config_database" "Failed to initialize any database. Wrong type passed in variable ZNUNY_DATABASE_TYPE"
+    ;;
+  esac
+
+}
+
+# :command.function
+zcli_config_operators_command() {
+  # src/config_operators_command.sh
+  echo "# this file is located in 'src/config_operators_command.sh'"
+  echo "# code for 'zcli config operators' goes here"
+  echo "# you can edit it freely and regenerate (it will not be overwritten)"
+  inspect_args
 
 }
 
@@ -853,7 +1244,8 @@ zcli_config_znuny_command() {
   # src/config_znuny_command.sh
   CONFIG_PATH="/opt/otrs/Kernel/Config.pm"
 
-  set_env
+  set_env_database
+  set_env_mailing
 
   customLogger "info" "config_znuny" "Check if the config file already exists"
   if [[ -f "${CONFIG_PATH}" ]]; then
@@ -887,16 +1279,21 @@ zcli_config_znuny_command() {
     "pgsql")
       gen_add_database_postgresql
       ;;
-    "mssql")
-      gen_add_database_microsoftsql
-      ;;
-    "oracle")
-      gen_add_database_oracle
-      ;;
   esac
 
   customLogger "info" "config_znuny" "Generate the filesystem root directory"
   gen_add_fs_root_dir
+
+  customLogger "info" "config_znuny" "Generate mailing configurations"
+  case ${ZNUNY_MAILING_TYPE} in
+    "internal")
+      gen_add_mailing_sendmail
+
+      ;;
+    "external")
+      gen_add_mailing_smtp ${ZNUNY_MAILING_HOST} ${ZNUNY_MAILING_PORT} ${ZNUNY_MAILING_USER} ${ZNUNY_MAILING_PASSWORD}
+      ;;
+  esac
 
   customLogger "info" "config_znuny" "Generate the configuration return"
   gen_add_return
@@ -913,7 +1310,19 @@ zcli_config_znuny_command() {
 zcli_check_modules_command() {
   # src/check_modules_command.sh
   customLogger "info" "check_modules" "Check Perl modules"
-  /opt/otrs/bin/otrs.CheckModules.pl --all > /dev/null 2>&1
+  su -c "/opt/otrs/bin/otrs.CheckModules.pl --all 2>&1>/dev/null" -s /bin/bash otrs
+
+  # customLogger "info" "check_modules" "Ensure all packages are installed"
+  customLogger "info" "check_modules" "Check packages installations"
+  su -c "/opt/otrs/bin/otrs.Console.pl Admin::Package::ReinstallAll" -s /bin/bash otrs
+
+}
+
+# :command.function
+zcli_check_config_command() {
+  # src/check_config_command.sh
+  customLogger "info" "check_config" "Rebuild configuration"
+  su -c "/opt/otrs/bin/otrs.Console.pl Maint::Config::Rebuild --cleanup" -s /bin/sh otrs
 
 }
 
@@ -946,28 +1355,38 @@ zcli_init_command() {
   # src/init_command.sh
   zcli download
 
-  zcli config znuny
+  zcli user system
 
-  zcli config cron
+  zcli config znuny
 
   zcli config apache
 
-  zcli user add
+  zcli config crons
+
+  zcli user permissions
+
+  zcli config database
 
   zcli check modules
 
-  # sleep 1000000
+  zcli check config
+
+  zcli user admin
+
   zcli run
+
+  sleep 1000000
 
 }
 
 # :command.function
 zcli_run_command() {
   # src/run_command.sh
-  customLogger "info" "run" "Launch the main cron of Znuny"
-  su -c "/opt/otrs/bin/Cron.sh start" -s /bin/bash otrs
+  customLogger "info" "run" "Launch the daemon of Znuny"
+  su -c "/opt/otrs/bin/otrs.Daemon.pl start" -s /bin/sh otrs
 
-  sleep 1
+  customLogger "info" "run" "Launch Crons of Znuny"
+  su -c "/opt/otrs/bin/Cron.sh start" -s /bin/bash otrs
 
   customLogger "info" "run" "Launch the web server"
   /usr/sbin/apache2ctl -D FOREGROUND
@@ -975,15 +1394,32 @@ zcli_run_command() {
 }
 
 # :command.function
-zcli_user_add_command() {
-  # src/user_add_command.sh
+zcli_user_admin_command() {
+  # src/user_admin_command.sh
+  customLogger "info" "user_system" "Create the application admin user: '${ZNUNY_USER_ADMIN_NAME}'"
+  su -c "/opt/otrs/bin/otrs.Console.pl Admin::User::SetPassword ${ZNUNY_USER_ADMIN_NAME} ${ZNUNY_USER_ADMIN_PASSWORD}" -s /bin/sh otrs
+
+}
+
+# :command.function
+zcli_user_permissions_command() {
+  # src/user_permissions_command.sh
   APP_USER="otrs"
 
-  customLogger "info" "user" "Create the application user '${APP_USER}'"
-  useradd -d /opt/otrs -c 'Znuny user' -g www-data -s /bin/bash -M -N ${APP_USER}
+  customLogger "info" "user_permissions" "Set the permission for the user onto the applications directories"
+  /opt/otrs/bin/otrs.SetPermissions.pl 2>&1>/dev/null
 
-  customLogger "info" "user" "Set the permission for the user onto the applications directories"
-  /opt/otrs/bin/otrs.SetPermissions.pl >/dev/null 2>&1
+}
+
+# :command.function
+zcli_user_system_command() {
+  # src/user_system_command.sh
+  APP_USER="otrs"
+
+  customLogger "info" "user_system" "Create the system user '${APP_USER}'"
+  useradd -d /opt/otrs -c 'Znuny user' -g www-data -s /bin/bash -M -N ${APP_USER} 2>&1>/dev/null || true
+
+  zcli user permissions
 
 }
 
@@ -1125,10 +1561,31 @@ zcli_config_parse_requirements() {
       shift $#
       ;;
 
-    cron)
-      action="cron"
+    crons)
+      action="crons"
       shift
-      zcli_config_cron_parse_requirements "$@"
+      zcli_config_crons_parse_requirements "$@"
+      shift $#
+      ;;
+
+    customers)
+      action="customers"
+      shift
+      zcli_config_customers_parse_requirements "$@"
+      shift $#
+      ;;
+
+    database)
+      action="database"
+      shift
+      zcli_config_database_parse_requirements "$@"
+      shift $#
+      ;;
+
+    operators)
+      action="operators"
+      shift
+      zcli_config_operators_parse_requirements "$@"
       shift $#
       ;;
 
@@ -1220,13 +1677,13 @@ zcli_config_apache_parse_requirements() {
 }
 
 # :command.parse_requirements
-zcli_config_cron_parse_requirements() {
+zcli_config_crons_parse_requirements() {
   # :command.fixed_flags_filter
   while [[ $# -gt 0 ]]; do
     case "${1:-}" in
       --help | -h)
         long_usage=yes
-        zcli_config_cron_usage
+        zcli_config_crons_usage
         exit
         ;;
 
@@ -1238,7 +1695,139 @@ zcli_config_cron_parse_requirements() {
   done
 
   # :command.command_filter
-  action="config cron"
+  action="config crons"
+
+  # :command.parse_requirements_while
+  while [[ $# -gt 0 ]]; do
+    key="$1"
+    case "$key" in
+
+      -?*)
+        printf "invalid option: %s\n" "$key" >&2
+        exit 1
+        ;;
+
+      *)
+        # :command.parse_requirements_case
+        # :command.parse_requirements_case_simple
+        printf "invalid argument: %s\n" "$key" >&2
+        exit 1
+
+        ;;
+
+    esac
+  done
+
+}
+
+# :command.parse_requirements
+zcli_config_customers_parse_requirements() {
+  # :command.fixed_flags_filter
+  while [[ $# -gt 0 ]]; do
+    case "${1:-}" in
+      --help | -h)
+        long_usage=yes
+        zcli_config_customers_usage
+        exit
+        ;;
+
+      *)
+        break
+        ;;
+
+    esac
+  done
+
+  # :command.command_filter
+  action="config customers"
+
+  # :command.parse_requirements_while
+  while [[ $# -gt 0 ]]; do
+    key="$1"
+    case "$key" in
+
+      -?*)
+        printf "invalid option: %s\n" "$key" >&2
+        exit 1
+        ;;
+
+      *)
+        # :command.parse_requirements_case
+        # :command.parse_requirements_case_simple
+        printf "invalid argument: %s\n" "$key" >&2
+        exit 1
+
+        ;;
+
+    esac
+  done
+
+}
+
+# :command.parse_requirements
+zcli_config_database_parse_requirements() {
+  # :command.fixed_flags_filter
+  while [[ $# -gt 0 ]]; do
+    case "${1:-}" in
+      --help | -h)
+        long_usage=yes
+        zcli_config_database_usage
+        exit
+        ;;
+
+      *)
+        break
+        ;;
+
+    esac
+  done
+
+  # :command.command_filter
+  action="config database"
+
+  # :command.parse_requirements_while
+  while [[ $# -gt 0 ]]; do
+    key="$1"
+    case "$key" in
+
+      -?*)
+        printf "invalid option: %s\n" "$key" >&2
+        exit 1
+        ;;
+
+      *)
+        # :command.parse_requirements_case
+        # :command.parse_requirements_case_simple
+        printf "invalid argument: %s\n" "$key" >&2
+        exit 1
+
+        ;;
+
+    esac
+  done
+
+}
+
+# :command.parse_requirements
+zcli_config_operators_parse_requirements() {
+  # :command.fixed_flags_filter
+  while [[ $# -gt 0 ]]; do
+    case "${1:-}" in
+      --help | -h)
+        long_usage=yes
+        zcli_config_operators_usage
+        exit
+        ;;
+
+      *)
+        break
+        ;;
+
+    esac
+  done
+
+  # :command.command_filter
+  action="config operators"
 
   # :command.parse_requirements_while
   while [[ $# -gt 0 ]]; do
@@ -1338,6 +1927,13 @@ zcli_check_parse_requirements() {
       shift $#
       ;;
 
+    config)
+      action="config"
+      shift
+      zcli_check_config_parse_requirements "$@"
+      shift $#
+      ;;
+
     # :command.command_fallback
     "")
       zcli_check_usage >&2
@@ -1394,6 +1990,50 @@ zcli_check_modules_parse_requirements() {
 
   # :command.command_filter
   action="check modules"
+
+  # :command.parse_requirements_while
+  while [[ $# -gt 0 ]]; do
+    key="$1"
+    case "$key" in
+
+      -?*)
+        printf "invalid option: %s\n" "$key" >&2
+        exit 1
+        ;;
+
+      *)
+        # :command.parse_requirements_case
+        # :command.parse_requirements_case_simple
+        printf "invalid argument: %s\n" "$key" >&2
+        exit 1
+
+        ;;
+
+    esac
+  done
+
+}
+
+# :command.parse_requirements
+zcli_check_config_parse_requirements() {
+  # :command.fixed_flags_filter
+  while [[ $# -gt 0 ]]; do
+    case "${1:-}" in
+      --help | -h)
+        long_usage=yes
+        zcli_check_config_usage
+        exit
+        ;;
+
+      *)
+        break
+        ;;
+
+    esac
+  done
+
+  # :command.command_filter
+  action="check config"
 
   # :command.parse_requirements_while
   while [[ $# -gt 0 ]]; do
@@ -1574,10 +2214,24 @@ zcli_user_parse_requirements() {
   case $action in
     -*) ;;
 
-    add)
-      action="add"
+    admin)
+      action="admin"
       shift
-      zcli_user_add_parse_requirements "$@"
+      zcli_user_admin_parse_requirements "$@"
+      shift $#
+      ;;
+
+    permissions)
+      action="permissions"
+      shift
+      zcli_user_permissions_parse_requirements "$@"
+      shift $#
+      ;;
+
+    system)
+      action="system"
+      shift
+      zcli_user_system_parse_requirements "$@"
       shift $#
       ;;
 
@@ -1618,13 +2272,13 @@ zcli_user_parse_requirements() {
 }
 
 # :command.parse_requirements
-zcli_user_add_parse_requirements() {
+zcli_user_admin_parse_requirements() {
   # :command.fixed_flags_filter
   while [[ $# -gt 0 ]]; do
     case "${1:-}" in
       --help | -h)
         long_usage=yes
-        zcli_user_add_usage
+        zcli_user_admin_usage
         exit
         ;;
 
@@ -1636,7 +2290,95 @@ zcli_user_add_parse_requirements() {
   done
 
   # :command.command_filter
-  action="user add"
+  action="user admin"
+
+  # :command.parse_requirements_while
+  while [[ $# -gt 0 ]]; do
+    key="$1"
+    case "$key" in
+
+      -?*)
+        printf "invalid option: %s\n" "$key" >&2
+        exit 1
+        ;;
+
+      *)
+        # :command.parse_requirements_case
+        # :command.parse_requirements_case_simple
+        printf "invalid argument: %s\n" "$key" >&2
+        exit 1
+
+        ;;
+
+    esac
+  done
+
+}
+
+# :command.parse_requirements
+zcli_user_permissions_parse_requirements() {
+  # :command.fixed_flags_filter
+  while [[ $# -gt 0 ]]; do
+    case "${1:-}" in
+      --help | -h)
+        long_usage=yes
+        zcli_user_permissions_usage
+        exit
+        ;;
+
+      *)
+        break
+        ;;
+
+    esac
+  done
+
+  # :command.command_filter
+  action="user permissions"
+
+  # :command.parse_requirements_while
+  while [[ $# -gt 0 ]]; do
+    key="$1"
+    case "$key" in
+
+      -?*)
+        printf "invalid option: %s\n" "$key" >&2
+        exit 1
+        ;;
+
+      *)
+        # :command.parse_requirements_case
+        # :command.parse_requirements_case_simple
+        printf "invalid argument: %s\n" "$key" >&2
+        exit 1
+
+        ;;
+
+    esac
+  done
+
+}
+
+# :command.parse_requirements
+zcli_user_system_parse_requirements() {
+  # :command.fixed_flags_filter
+  while [[ $# -gt 0 ]]; do
+    case "${1:-}" in
+      --help | -h)
+        long_usage=yes
+        zcli_user_system_usage
+        exit
+        ;;
+
+      *)
+        break
+        ;;
+
+    esac
+  done
+
+  # :command.command_filter
+  action="user system"
 
   # :command.parse_requirements_while
   while [[ $# -gt 0 ]]; do
@@ -1687,15 +2429,21 @@ run() {
   case "$action" in
     "config") zcli_config_command ;;
     "config apache") zcli_config_apache_command ;;
-    "config cron") zcli_config_cron_command ;;
+    "config crons") zcli_config_crons_command ;;
+    "config customers") zcli_config_customers_command ;;
+    "config database") zcli_config_database_command ;;
+    "config operators") zcli_config_operators_command ;;
     "config znuny") zcli_config_znuny_command ;;
     "check") zcli_check_command ;;
     "check modules") zcli_check_modules_command ;;
+    "check config") zcli_check_config_command ;;
     "download") zcli_download_command ;;
     "init") zcli_init_command ;;
     "run") zcli_run_command ;;
     "user") zcli_user_command ;;
-    "user add") zcli_user_add_command ;;
+    "user admin") zcli_user_admin_command ;;
+    "user permissions") zcli_user_permissions_command ;;
+    "user system") zcli_user_system_command ;;
   esac
 }
 

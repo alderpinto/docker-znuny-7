@@ -7,8 +7,10 @@ RUN apt-get update && apt-get install -y \
   curl \
   jq \
   apache2 \
+  openssl \
   cron \
   cpanminus \
+  mariadb-client \
   libapache2-mod-perl2 \
   libdbd-mysql-perl \
   libtimedate-perl \
