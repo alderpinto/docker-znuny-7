@@ -40,25 +40,26 @@ jobs:
 
       - name: Extract tag name
         id: extract-tag
-        run: echo ::set-output name=tag_name::${{ github.ref#refs/tags/ }}
+        run: echo "GIT_TAG=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
 
-      - name: Build and push Docker image ${{ github.ref }}
+      - name: Build and push Docker image ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.GIT_TAG }}
         id: build-and-push
         uses: docker/build-push-action@v3
         with:
           context: .
-          push: ${{ github.event_name != 'pull_request' }}
+          file: ./znuny/Dockerfile
+          push: true
           tags: |
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.extract-tag.outputs.tag_name }}
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.GIT_TAG }}
           labels: |
             ${{ steps.meta.outputs.labels }}
             ${{ github.ref }}
 
-      - name: Build and push Docker image latest
-        if: github.event_name != 'pull_request'
+      - name: Build and push Docker image ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
         uses: docker/build-push-action@v3
         with:
           context: .
+          file: ./znuny/Dockerfile
           push: true
           tags: |
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
