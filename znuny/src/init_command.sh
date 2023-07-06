@@ -18,6 +18,8 @@ zcli check config
 
 zcli user admin
 
+zcli dev
+
 zcli run
 
-sleep 1000000
+# sleep 1000000

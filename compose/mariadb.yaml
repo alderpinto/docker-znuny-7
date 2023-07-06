@@ -1,0 +1,14 @@
+version: "3"
+
+services:
+  mariadb:
+    image: mariadb:11
+    container_name: mariadb
+    hostname: mariadb
+    ports:
+      - 3306:3306
+    environment:
+      MARIADB_ROOT_PASSWORD: password
+      MARIADB_DATABASE: znuny-db
+      MARIADB_USER: znuny
+      MARIADB_PASSWORD: password
