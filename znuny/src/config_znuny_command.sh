@@ -50,6 +50,38 @@ case ${ZNUNY_MAILING_TYPE} in
     ;;
 esac
 
+customLogger "info" "config_znuny" "Generate customers backends"
+for i in {1..9}; do
+  COMPOSED_VAR="ZNUNY_CUSTOMER_BACKEND_${i}"
+  if [[ ! -z ${!COMPOSED_VAR} ]]; then
+    gen_add_customers_backend "${!COMPOSED_VAR}"
+  fi
+done
+
+customLogger "info" "config_znuny" "Generate customers synchronizations"
+for i in {1..9}; do
+  COMPOSED_VAR="ZNUNY_CUSTOMER_SYNCHRO_${i}"
+  if [[ ! -z ${!COMPOSED_VAR} ]]; then
+    gen_add_customers_synchro "${!COMPOSED_VAR}"
+  fi
+done
+
+customLogger "info" "config_znuny" "Generate agents backends"
+for i in {1..9}; do
+  COMPOSED_VAR="ZNUNY_AGENTS_BACKEND_${i}"
+  if [[ ! -z ${!COMPOSED_VAR} ]]; then
+    gen_add_agents_backend "${!COMPOSED_VAR}"
+  fi
+done
+
+customLogger "info" "config_znuny" "Generate agents synchronizations"
+for i in {1..9}; do
+  COMPOSED_VAR="ZNUNY_AGENTS_SYNCHRO_${i}"
+  if [[ ! -z ${!COMPOSED_VAR} ]]; then
+    gen_add_agents_synchro "${!COMPOSED_VAR}"
+  fi
+done
+
 customLogger "info" "config_znuny" "Generate the configuration return"
 gen_add_return
 

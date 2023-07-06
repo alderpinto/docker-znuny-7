@@ -34,12 +34,28 @@ services:
       ZNUNY_MAILING_USER: znuny
       ZNUNY_MAILING_PASSWORD: password
       # Settings: Customers
-      # ZNUNY_CUSTOMER_BACKEND_1: |-
-      # ZNUNY_CUSTOMER_SYNCHRO_1: |-
+      ZNUNY_CUSTOMER_BACKEND_1: |-
+        $$Self->{AuthModule} = 'Kernel::System::Auth::LDAP';
+        $$Self->{'AuthModule::LDAP::Host'} = 'ldap.example.com';
+        $$Self->{'AuthModule::LDAP::BaseDN'} = 'dc=example,dc=com';
+        $$Self->{'AuthModule::LDAP::UID'} = 'uid';
+        $$Self->{'AuthModule::LDAP::GroupDN'} = 'cn=znuny-allow,ou=posixGroups,dc=example,dc=com';
+        $$Self->{'AuthModule::LDAP::AccessAttr'} = 'memberUid';
+        $$Self->{'AuthModule::LDAP::UserAttr'} = 'UID';
+        $$Self->{'AuthModule::LDAP::UserAttr'} = 'DN';
+      ZNUNY_CUSTOMER_SYNCHRO_1: |-
+        $$Self->{'AuthSyncModule'} = 'Kernel::System::Auth::Sync::LDAP';
+        $$Self->{'AuthSyncModule::LDAP::Host'} = 'ldap.example.com';
+        $$Self->{'AuthSyncModule::LDAP::BaseDN'} = 'dc=example,dc=com';
+        $$Self->{'AuthSyncModule::LDAP::UID'} = 'uid';
+        $$Self->{'AuthSyncModule::LDAP::SearchUserDN'} = '';
+        $$Self->{'AuthSyncModule::LDAP::SearchUserPw'} = '';
+        $$Self->{'AuthSyncModule::LDAP::AlwaysFilter'} = '';
+        $$Self->{'AuthSyncModule::LDAP::UserSyncMap'} = {
+            UserFirstname => 'givenName',
+            UserLastname  => 'sn',
+            UserEmail     => 'mail',
+        };
       # Settings: Agents
       # ZNUNY_AGENT_BACKEND_1: |-
       # ZNUNY_AGENT_SYNCHRO_1: |-
-      ZNUNY_TEST_VAR: |
-        Ligne 1
-
-        Ligne 3
