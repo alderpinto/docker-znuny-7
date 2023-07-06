@@ -1,0 +1,14 @@
+version: "3"
+
+services:
+  postgresql:
+    image: postgres:15.3-alpine
+    container_name: postgresql
+    hostname: postgresql
+    # ports:
+    #   - 5432:5432
+    environment:
+      PGDATA: /var/lib/postgresql/data/pgdata
+      POSTGRES_DB: znuny
+      POSTGRES_USER: znuny
+      POSTGRES_PASSWORD: password

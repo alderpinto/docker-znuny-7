@@ -19,7 +19,14 @@ services:
   mariadb:
     # networks:
     #   net:
-    #     ipv4_address: 172.30.0.11
+    #     ipv4_address: 172.30.0.12
     extends:
       file: compose/mariadb.yaml
       service: mariadb
+  # postgresql:
+  #   # networks:
+  #   #   net:
+  #   #     ipv4_address: 172.30.0.13
+  #   extends:
+  #     file: compose/postgresql.yaml
+  #     service: postgresql
