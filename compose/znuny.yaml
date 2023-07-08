@@ -24,7 +24,7 @@ services:
         RewriteRule ^/$ https://%{HTTP_HOST}/otrs/customer.pl
         RewriteRule ^/otrs/$ https://%{HTTP_HOST}/otrs/customer.pl
         RewriteRule ^/otrs$ https://%{HTTP_HOST}/otrs/customer.pl
-      # Settings: Application
+      # Settings: Users
       ZNUNY_USER_ADMIN_NAME: root@localhost
       ZNUNY_USER_ADMIN_PASSWORD: password
       # Settings: Mails
