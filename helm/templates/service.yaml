@@ -8,9 +8,9 @@ metadata:
     service: {{ .Release.Name }}
 spec:
   ports:
-    - name: "{{ .Values.znuny.service.port }}"
-      port: {{ .Values.znuny.service.port }}
-      targetPort: {{ .Values.znuny.service.port }}
+    - name: "{{ .Values.service.port }}"
+      port: {{ .Values.service.port }}
+      targetPort: {{ .Values.service.port }}
   selector:
     service: {{ .Release.Name }}
 status:

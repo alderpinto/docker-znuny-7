@@ -1,5 +1,5 @@
 {{- $rel := .Release -}}
-{{- range $pvc := .Values.znuny.persistentVolumeClaims }}
+{{- range $pvc := .Values.persistentVolumeClaims }}
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim

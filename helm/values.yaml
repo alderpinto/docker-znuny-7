@@ -2,9 +2,11 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-nameOverride: ""
-namespaceOverride: ""
-fullnameOverride: ""
+nameOverride: {}
+# nameOverride: ""
+
+namespaceOverride: {}
+# namespaceOverride: ""
 
 serviceAccount:
   # Specifies whether a service account should be created
@@ -15,144 +17,138 @@ serviceAccount:
   # If not set and create is true, a name is generated using the fullname template
   name: ""
 
-
 imagePullSecrets: []
+# imagePullSecrets:
+#   - github-registry-secret
+restartPolicy: Always
+deploymentStrategy: Recreate
+replicaCount: 1
 
-znuny:
-  image:
-    repository: docker pull ghcr.io/mln-nicolas-b/docker-znuny:latest
-    tag: latest
-    pullPolicy: IfNotPresent
+image:
+  repository: ghcr.io/mln-nicolas-b/docker-znuny
+  tag: v6.5.3-1
+  pullPolicy: IfNotPresent
 
-  replicaCount: 1
+config:
+  database:
+    type: mysql
+    host: mariadb
+    name: znuny
+    user: znuny
+    password: password
 
-  config:
-    database:
-      type: mysql
-      host: mariadb
-      name: znuny
-      user: znuny
+  webServer:
+    rewriteRules:
+      - RewriteRule ^/$ https://%{HTTP_HOST}/otrs/customer.pl
+      - RewriteRule ^/otrs/$ https://%{HTTP_HOST}/otrs/customer.pl
+      - RewriteRule ^/otrs$ https://%{HTTP_HOST}/otrs/customer.pl
+
+  users:
+    admin:
+      name: root@localhost
       password: password
 
-    webServer:
-      rewriteRules:
-        - RewriteRule ^/$ https://%{HTTP_HOST}/otrs/customer.pl
-        - RewriteRule ^/otrs/$ https://%{HTTP_HOST}/otrs/customer.pl
-        - RewriteRule ^/otrs$ https://%{HTTP_HOST}/otrs/customer.pl
+  mails:
+    type: external
+    host: smtp.domain.tld
+    port: 25
+    user: znuny@domain.tld
+    password: password
 
-    users:
-      admin:
-        name: root@localhost
-        password: password
+  authentications:
+    customers:
+      backends: {}
+      # backends:
+      #   - |-
+      #     $$Self->{AuthModule} = 'Kernel::System::Auth::LDAP';
+      #     $$Self->{'AuthModule::LDAP::Host'} = 'ldap.example.com';
+      #     $$Self->{'AuthModule::LDAP::BaseDN'} = 'dc=example,dc=com';
+      #     $$Self->{'AuthModule::LDAP::UID'} = 'uid';
+      #     $$Self->{'AuthModule::LDAP::GroupDN'} = 'cn=znuny-allow,ou=posixGroups,dc=example,dc=com';
+      #     $$Self->{'AuthModule::LDAP::AccessAttr'} = 'memberUid';
+      #     $$Self->{'AuthModule::LDAP::UserAttr'} = 'UID';
+      #     $$Self->{'AuthModule::LDAP::UserAttr'} = 'DN';
+      synchronizations: {}
+      # synchronizations:
+        # - |-
+        #   $$Self->{'AuthSyncModule'} = 'Kernel::System::Auth::Sync::LDAP';
+        #   $$Self->{'AuthSyncModule::LDAP::Host'} = 'ldap.example.com';
+        #   $$Self->{'AuthSyncModule::LDAP::BaseDN'} = 'dc=example,dc=com';
+        #   $$Self->{'AuthSyncModule::LDAP::UID'} = 'uid';
+        #   $$Self->{'AuthSyncModule::LDAP::SearchUserDN'} = '';
+        #   $$Self->{'AuthSyncModule::LDAP::SearchUserPw'} = '';
+        #   $$Self->{'AuthSyncModule::LDAP::AlwaysFilter'} = '';
+        #   $$Self->{'AuthSyncModule::LDAP::UserSyncMap'} = {
+        #       UserFirstname => 'givenName',
+        #       UserLastname  => 'sn',
+        #       UserEmail     => 'mail',
+        #   };
+    agents:
+      backends: {}
+      # backends:
+        # - |-
+      synchronizations: {}
+      # synchronizations:
+        # - |-
 
-    mails:
-      type: external
-      host: smtp.domain.tld
-      port: 25
-      user: znuny@domain.tld
-      password: password
+autoscaling: {}
+# autoscaling:
+#   minReplicas: 1
+#   maxReplicas: 3
+#   targetCPUUtilizationPercentage: 20
+#   targetMemoryUtilizationPercentage: 50
 
-    authentications:
-      customers:
-        backends: {}
-        # backends:
-        #   - |-
-        #     $$Self->{AuthModule} = 'Kernel::System::Auth::LDAP';
-        #     $$Self->{'AuthModule::LDAP::Host'} = 'ldap.example.com';
-        #     $$Self->{'AuthModule::LDAP::BaseDN'} = 'dc=example,dc=com';
-        #     $$Self->{'AuthModule::LDAP::UID'} = 'uid';
-        #     $$Self->{'AuthModule::LDAP::GroupDN'} = 'cn=znuny-allow,ou=posixGroups,dc=example,dc=com';
-        #     $$Self->{'AuthModule::LDAP::AccessAttr'} = 'memberUid';
-        #     $$Self->{'AuthModule::LDAP::UserAttr'} = 'UID';
-        #     $$Self->{'AuthModule::LDAP::UserAttr'} = 'DN';
-        synchronizations: {}
-        # synchronizations:
-          # - |-
-          #   $$Self->{'AuthSyncModule'} = 'Kernel::System::Auth::Sync::LDAP';
-          #   $$Self->{'AuthSyncModule::LDAP::Host'} = 'ldap.example.com';
-          #   $$Self->{'AuthSyncModule::LDAP::BaseDN'} = 'dc=example,dc=com';
-          #   $$Self->{'AuthSyncModule::LDAP::UID'} = 'uid';
-          #   $$Self->{'AuthSyncModule::LDAP::SearchUserDN'} = '';
-          #   $$Self->{'AuthSyncModule::LDAP::SearchUserPw'} = '';
-          #   $$Self->{'AuthSyncModule::LDAP::AlwaysFilter'} = '';
-          #   $$Self->{'AuthSyncModule::LDAP::UserSyncMap'} = {
-          #       UserFirstname => 'givenName',
-          #       UserLastname  => 'sn',
-          #       UserEmail     => 'mail',
-          #   };
-      agents:
-        backends: {}
-          # - |-
-        synchronizations: {}
-          # - |-
+service:
+  type: ClusterIP
+  port: 80
 
-  autoscaling:
-    enabled: false
-    minReplicas: 1
-    maxReplicas: 3
-    targetCPUUtilizationPercentage: 20
-    targetMemoryUtilizationPercentage: 50
-
-  service:
-    type: ClusterIP
-    port: 80
-
-  ingress:
-    enabled: false
-    domain: znuny.domain.tld
+ingress:
+  enabled: false
+  domain: znuny.domain.tld
+  annotations:
+    - "kubernetes.io/ingress.class: nginx"
+  tls:
+    enabled: true
     annotations:
-      - "kubernetes.io/ingress.class: nginx"
-    tls:
-      enabled: true
-      annotations:
-        - "cert-manager.io/cluster-issuer: letsencrypt-prod"
+      - "cert-manager.io/cluster-issuer: letsencrypt-prod"
 
-  persistentVolumeClaims:
-    - name: "data"
-      size: "100Mi"
-      mount: "/datas"
+persistentVolumeClaims: {}
+# persistentVolumeClaims:
+  # - name: "data"
+  #   size: "100Mi"
+  #   mount: "/datas"
 
-  podAnnotations: {}
+podAnnotations: {}
+# podAnnotations:
+#   - ""
 
-  podSecurityContext: {}
-    # fsGroup: 2000
+resources: {}
+# resources:
+#   limits:
+#     cpu: 100m
+#     memory: 128Mi
+#   requests:
+#     cpu: 100m
+#     memory: 128Mi
 
-  securityContext: {}
-    # capabilities:
-    #   drop:
-    #   - ALL
-    # readOnlyRootFilesystem: true
-    # runAsNonRoot: true
-    # runAsUser: 1000
+##TODO
+podSecurityContext: {}
+  # fsGroup: 2000
 
-  resources: {}
-    # We usually recommend not to specify default resources and to leave this as a conscious
-    # choice for the user. This also increases chances charts run on environments with little
-    # resources, such as Minikube. If you do want to specify resources, uncomment the following
-    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-    # limits:
-    #   cpu: 100m
-    #   memory: 128Mi
-    # requests:
-    #   cpu: 100m
-    #   memory: 128Mi
+##TODO
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
 
-  nodeSelector: {}
+##TODO
+nodeSelector: {}
 
-  tolerations: []
+##TODO
+tolerations: []
 
-  affinity: {}
-
-mariadb:
-  enabled: false
-  rootPassword: password
-  database: znuny
-  user: znuny
-  password: password
-
-postgresql:
-  enabled: false
-  postgresData: /var/lib/postgresql/data/pgdata
-  database: znuny
-  user: znuny
-  password: password
+##TODO
+affinity: {}

@@ -1,0 +1,86 @@
+{{- $rel := .Release -}}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $rel.Name }}
+  namespace: {{ $rel.Namespace }}
+  labels:
+    service: {{ $rel.Name }}
+    {{- /*
+      ### Template pod annotations
+    */ -}}
+    {{- if .Values.podAnnotations }}
+    annotations:
+      {{- range .Values.podAnnotations }}
+      - {{ . }}
+      {{- end }}
+    {{- end }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      service: {{ $rel.Name }}
+  strategy:
+    type: {{ .Values.deploymentStrategy }}
+  template:
+    metadata:
+      labels:
+        service: {{ $rel.Name }}
+    spec:
+      containers:
+        - name: {{ $rel.Name }}
+          image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+          ports:
+            - containerPort: {{ .Values.service.port }}
+          {{- /*
+            ### Template pod resources
+          */ -}}
+          {{- if .Values.resources }}
+          resources:
+            limits:
+              cpu: {{ .Values.resources.limits.cpu }}
+              memory: {{ .Values.resources.limits.memory }}
+            requests:
+              cpu: {{ .Values.resources.requests.cpu }}
+              memory: {{ .Values.resources.requests.memory }}
+          {{- end }}
+          {{- /*
+            ### Template volume mounts
+          */ -}}
+          {{- if .Values.persistenVolumeClaims }}
+          volumeMounts:
+            {{- range $pvc := .Values.persistentVolumeClaims }}
+            - mountPath: "{{ $pvc.mount }}"
+              name: {{ $rel.Name }}-{{ $pvc.name }}
+            {{- end }}
+          {{- end }}
+          {{- /*
+            ### Template environment variables
+          */ }}
+          env:
+            envFrom:
+              - configMapRef:
+                name: {{ $rel.Name }}-config
+      hostname: {{ $rel.Name }}
+      restartPolicy: {{ .Values.restartPolicy }}
+      {{- /*
+        ### Template the image pull secrets
+      */ -}}
+      {{- if .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- range .Values.imagePullSecrets }}
+        - name: {{ . }}
+        {{- end }}
+      {{- end }}
+      {{- /*
+        ### Template persistent volume claims
+      */ -}}
+      {{- if .Values.persistentVolumeClaims }}
+      volumes:
+        {{- range $pvc := .Values.persistentVolumeClaims }}
+        - name: {{ $rel.Name }}-{{ $pvc.name }}
+          persistentVolumeClaim:
+            claimName: {{ $rel.Name }}-{{ $pvc.name }}
+        {{- end }}
+      {{- end }}
