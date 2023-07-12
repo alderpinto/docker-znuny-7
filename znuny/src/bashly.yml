@@ -1,6 +1,6 @@
 name: zcli
 help: Simple cli to manage the container of znuny
-version: 0.0.1
+version: 6.5.3.1
 
 environment_variables:
   - name: ZNUNY_DATABASE_TYPE
@@ -17,6 +17,16 @@ environment_variables:
     help: The admin user name
   - name: ZNUNY_USER_ADMIN_PASSWORD
     help: The admin user password
+  - name: ZNUNY_MAILING_TYPE
+    help: The mailing type
+  - name: ZNUNY_MAILING_HOST
+    help: The mailing host
+  - name: ZNUNY_MAILING_PORT
+    help: The mailing port
+  - name: ZNUNY_MAILING_USER
+    help: The mailing user
+  - name: ZNUNY_MAILING_PASSWORD
+    help: The mailing password
   - name: ZNUNY_APACHE_REWRITE_RULE_1
     help: A custom rewrite rule
   - name: ZNUNY_APACHE_REWRITE_RULE_2
@@ -35,8 +45,83 @@ environment_variables:
     help: A custom rewrite rule
   - name: ZNUNY_APACHE_REWRITE_RULE_9
     help: A custom rewrite rule
+  - name: ZNUNY_CUSTOMER_BACKEND_1
+    help: Customers authentication backend
+  - name: ZNUNY_CUSTOMER_BACKEND_2
+    help: Customers authentication backend
+  - name: ZNUNY_CUSTOMER_BACKEND_3
+    help: Customers authentication backend
+  - name: ZNUNY_CUSTOMER_BACKEND_4
+    help: Customers authentication backend
+  - name: ZNUNY_CUSTOMER_BACKEND_5
+    help: Customers authentication backend
+  - name: ZNUNY_CUSTOMER_BACKEND_6
+    help: Customers authentication backend
+  - name: ZNUNY_CUSTOMER_BACKEND_7
+    help: Customers authentication backend
+  - name: ZNUNY_CUSTOMER_BACKEND_8
+    help: Customers authentication backend
+  - name: ZNUNY_CUSTOMER_BACKEND_9
+    help: Customers authentication backend
+  - name: ZNUNY_CUSTOMER_SYNCHRO_1
+    help: Customers authentication synchronization
+  - name: ZNUNY_CUSTOMER_SYNCHRO_2
+    help: Customers authentication synchronization
+  - name: ZNUNY_CUSTOMER_SYNCHRO_3
+    help: Customers authentication synchronization
+  - name: ZNUNY_CUSTOMER_SYNCHRO_4
+    help: Customers authentication synchronization
+  - name: ZNUNY_CUSTOMER_SYNCHRO_5
+    help: Customers authentication synchronization
+  - name: ZNUNY_CUSTOMER_SYNCHRO_6
+    help: Customers authentication synchronization
+  - name: ZNUNY_CUSTOMER_SYNCHRO_7
+    help: Customers authentication synchronization
+  - name: ZNUNY_CUSTOMER_SYNCHRO_8
+    help: Customers authentication synchronization
+  - name: ZNUNY_CUSTOMER_SYNCHRO_9
+    help: Customers authentication synchronization
+  - name: ZNUNY_AGENTS_BACKEND_1
+    help: Agents authentication backend
+  - name: ZNUNY_AGENTS_BACKEND_2
+    help: Agents authentication backend
+  - name: ZNUNY_AGENTS_BACKEND_3
+    help: Agents authentication backend
+  - name: ZNUNY_AGENTS_BACKEND_4
+    help: Agents authentication backend
+  - name: ZNUNY_AGENTS_BACKEND_5
+    help: Agents authentication backend
+  - name: ZNUNY_AGENTS_BACKEND_6
+    help: Agents authentication backend
+  - name: ZNUNY_AGENTS_BACKEND_7
+    help: Agents authentication backend
+  - name: ZNUNY_AGENTS_BACKEND_8
+    help: Agents authentication backend
+  - name: ZNUNY_AGENTS_BACKEND_9
+    help: Agents authentication backend
+  - name: ZNUNY_AGENTS_SYNCHRO_1
+    help: Agents authentication synchronization
+  - name: ZNUNY_AGENTS_SYNCHRO_2
+    help: Agents authentication synchronization
+  - name: ZNUNY_AGENTS_SYNCHRO_3
+    help: Agents authentication synchronization
+  - name: ZNUNY_AGENTS_SYNCHRO_4
+    help: Agents authentication synchronization
+  - name: ZNUNY_AGENTS_SYNCHRO_5
+    help: Agents authentication synchronization
+  - name: ZNUNY_AGENTS_SYNCHRO_6
+    help: Agents authentication synchronization
+  - name: ZNUNY_AGENTS_SYNCHRO_7
+    help: Agents authentication synchronization
+  - name: ZNUNY_AGENTS_SYNCHRO_8
+    help: Agents authentication synchronization
+  - name: ZNUNY_AGENTS_SYNCHRO_9
+    help: Agents authentication synchronization
 
 commands:
+  # - name: dev
+  #   help: Development command to test features
+  #
   - name: config
     help: Manage the configuration of znuny
     commands:
@@ -61,14 +146,14 @@ commands:
       - name: config
         help: Check the built configuration in database
 
-  # - name: dev
-  #   help: Development command to test features
-
   - name: download
     help: Download the znuny archive
 
   - name: init
     help: Initialize the container
+
+  - name: migration
+    help: Migrate an existing database
 
   - name: run
     help: Run Znuny
