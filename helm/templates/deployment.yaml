@@ -13,7 +13,7 @@ metadata:
     {{- if .Values.podAnnotations }}
     annotations:
       {{- range .Values.podAnnotations }}
-      - {{ . }}
+      - {{ . | quote }}
       {{- end }}
     {{- end }}
 spec:
@@ -51,13 +51,10 @@ spec:
           {{- if .Values.persistenVolumeClaims }}
           volumeMounts:
             {{- range $pvc := .Values.persistentVolumeClaims }}
-            - mountPath: "{{ $pvc.mount }}"
+            - mountPath: {{ $pvc.mount }}
               name: {{ $rel.Name }}-{{ $pvc.name }}
             {{- end }}
           {{- end }}
-          {{- /*
-            ### Template environment variables
-          */ }}
           env:
             envFrom:
               - configMapRef:

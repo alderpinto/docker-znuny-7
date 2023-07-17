@@ -33,15 +33,17 @@ config:
   database:
     type: mysql
     host: mariadb
+    port: 3306
     name: znuny
     user: znuny
     password: password
 
   webServer:
-    rewriteRules:
-      - RewriteRule ^/$ https://%{HTTP_HOST}/otrs/customer.pl
-      - RewriteRule ^/otrs/$ https://%{HTTP_HOST}/otrs/customer.pl
-      - RewriteRule ^/otrs$ https://%{HTTP_HOST}/otrs/customer.pl
+    rewriteRules: {}
+    # rewriteRules:
+    #   - RewriteRule ^/$ https://%{HTTP_HOST}/otrs/customer.pl
+    #   - RewriteRule ^/otrs/$ https://%{HTTP_HOST}/otrs/customer.pl
+    #   - RewriteRule ^/otrs$ https://%{HTTP_HOST}/otrs/customer.pl
 
   users:
     admin:
@@ -70,26 +72,26 @@ config:
       #     $$Self->{'AuthModule::LDAP::UserAttr'} = 'DN';
       synchronizations: {}
       # synchronizations:
-        # - |-
-        #   $$Self->{'AuthSyncModule'} = 'Kernel::System::Auth::Sync::LDAP';
-        #   $$Self->{'AuthSyncModule::LDAP::Host'} = 'ldap.example.com';
-        #   $$Self->{'AuthSyncModule::LDAP::BaseDN'} = 'dc=example,dc=com';
-        #   $$Self->{'AuthSyncModule::LDAP::UID'} = 'uid';
-        #   $$Self->{'AuthSyncModule::LDAP::SearchUserDN'} = '';
-        #   $$Self->{'AuthSyncModule::LDAP::SearchUserPw'} = '';
-        #   $$Self->{'AuthSyncModule::LDAP::AlwaysFilter'} = '';
-        #   $$Self->{'AuthSyncModule::LDAP::UserSyncMap'} = {
-        #       UserFirstname => 'givenName',
-        #       UserLastname  => 'sn',
-        #       UserEmail     => 'mail',
-        #   };
+      # - |-
+      #   $$Self->{'AuthSyncModule'} = 'Kernel::System::Auth::Sync::LDAP';
+      #   $$Self->{'AuthSyncModule::LDAP::Host'} = 'ldap.example.com';
+      #   $$Self->{'AuthSyncModule::LDAP::BaseDN'} = 'dc=example,dc=com';
+      #   $$Self->{'AuthSyncModule::LDAP::UID'} = 'uid';
+      #   $$Self->{'AuthSyncModule::LDAP::SearchUserDN'} = '';
+      #   $$Self->{'AuthSyncModule::LDAP::SearchUserPw'} = '';
+      #   $$Self->{'AuthSyncModule::LDAP::AlwaysFilter'} = '';
+      #   $$Self->{'AuthSyncModule::LDAP::UserSyncMap'} = {
+      #       UserFirstname => 'givenName',
+      #       UserLastname  => 'sn',
+      #       UserEmail     => 'mail',
+      #   };
     agents:
       backends: {}
       # backends:
-        # - |-
+      # - |-
       synchronizations: {}
       # synchronizations:
-        # - |-
+      # - |-
 
 autoscaling: {}
 # autoscaling:
@@ -114,9 +116,9 @@ ingress:
 
 persistentVolumeClaims: {}
 # persistentVolumeClaims:
-  # - name: "data"
-  #   size: "100Mi"
-  #   mount: "/datas"
+# - name: "data"
+#   size: "100Mi"
+#   mount: "/datas"
 
 podAnnotations: {}
 # podAnnotations:
@@ -132,11 +134,11 @@ resources: {}
 #     memory: 128Mi
 
 ##TODO
-podSecurityContext: {}
-  # fsGroup: 2000
+podSecurityContext: {} # fsGroup: 2000
 
 ##TODO
-securityContext: {}
+securityContext:
+  {}
   # capabilities:
   #   drop:
   #   - ALL

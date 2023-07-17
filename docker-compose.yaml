@@ -1,4 +1,9 @@
+---
 version: "3"
+
+volumes:
+  openldap_data:
+    driver: local
 
 # networks:
 #   net:
@@ -13,7 +18,7 @@ services:
     #   net:
     #     ipv4_address: 172.30.0.11
     extends:
-      file: compose/znuny.yaml
+      file: compose/znuny-dev.yaml
       service: znuny
 
   mariadb:
@@ -23,10 +28,21 @@ services:
     extends:
       file: compose/mariadb.yaml
       service: mariadb
-  # postgresql:
-  #   # networks:
-  #   #   net:
-  #   #     ipv4_address: 172.30.0.13
-  #   extends:
-  #     file: compose/postgresql.yaml
-  #     service: postgresql
+
+  postgresql:
+    # networks:
+    #   net:
+    #     ipv4_address: 172.30.0.13
+    extends:
+      file: compose/postgresql.yaml
+      service: postgresql
+
+  openldap:
+    # networks:
+    #   net:
+    #     ipv4_address: 172.30.0.14
+    volumes:
+      - openldap_data:/bitnami/openldap
+    extends:
+      file: compose/openldap.yaml
+      service: openldap

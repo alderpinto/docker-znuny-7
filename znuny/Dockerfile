@@ -11,6 +11,7 @@ RUN apt-get update && apt-get install -y \
   cron \
   cpanminus \
   mariadb-client \
+  postgresql-client \
   libapache2-mod-perl2 \
   libdbd-mysql-perl \
   libtimedate-perl \

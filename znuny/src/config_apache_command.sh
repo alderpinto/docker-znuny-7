@@ -16,6 +16,10 @@ if [[ ! -z ${ZNUNY_APACHE_REWRITE_RULES} ]]; then
   echo -e "</IfModule>\n" >> /etc/apache2/conf-available/zzz_znuny.conf
 fi
 
+#echo -e "ErrorLogFormat \"{ \\"time\\":\\"%{%Y-%m-%d}tT%{%T}t.%{msec_frac}tZ\\", \\"function\\" : \\"[%-m:%l]\\" , \\"process\\" : \\"[pid %P:tid %T]\\" , \\"message\\" : \\"%M\\" , \\"referer\\"\\ : \\"%{Referer}i\\" },\""
+
+#echo -e "LogFormat \\"{ \\"time\\":\\"%{%Y-%m-%d}tT%{%T}t.%{msec_frac}tZ\\", \\"process\\":\\"%D\\", \\"filename\\":\\"%f\\", \\"remoteIP\\":\\"%a\\", \\"host\\":\\"%V\\", \\"request\\":\\"%U\\", \\"query\\":\\"%q\\", \\"method\\":\\"%m\\", \\"status\\":\\"%>s\\", \\"userAgent\\":\\"%{User-agent}i\\", \\"referer\\":\\"%{Referer}i\\" },\" combined"
+
 customLogger "info" "config_apache" "Enable required Apache modules - Part 1"
 a2enmod perl headers deflate filter cgi 2>&1>/dev/null
 
