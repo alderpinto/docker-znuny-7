@@ -1,16 +1,16 @@
-## Catch app logs to format them in JSON - **v6.5.3.2**
+## Catch app logs to format them in JSON - **v6.5.3-2**
 
 - [ ] - Catch all application logs
 - [ ] - Format logs
 - [ ] - Write logs in STDOUT
 - [ ] - Write logs in a file
 
-## Add support to PostgreSQL - **v6.5.3.3**
+## Add support to PostgreSQL - **v6.5.3-3**
 
 - [ ] - Test the docker compose integration
 - [ ] - Test the scripts initialization
 
-## Databases migrations
+## Databases migrations - **v6.5.3-4**
 
 - [ ] - Get the dump file from an object storage
 - [ ] - Get the dump file from an other database
@@ -57,7 +57,7 @@ spec:
       restartPolicy: Never
 ```
 
-## Custom plugins - **v6.5.3.4**
+## Custom plugins - **v6.5.3-5**
 
 - [ ] - Understand the plugins working
 - [ ] - Create a method to add custom plugins dynamically
