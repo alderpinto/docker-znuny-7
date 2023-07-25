@@ -1,0 +1,1 @@
+zcli migration --help

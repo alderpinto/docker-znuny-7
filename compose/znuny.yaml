@@ -19,6 +19,7 @@ services:
       ZNUNY_DATABASE_USER: znuny
       ZNUNY_DATABASE_PASSWORD: password
       # Settings: Web server
+      ZNUNY_APACHE_DOMAIN: znuny.domain.tld
       ZNUNY_APACHE_REWRITE_RULES: |-
         RewriteRule ^/$ https://%{HTTP_HOST}/otrs/customer.pl
         RewriteRule ^/otrs/$ https://%{HTTP_HOST}/otrs/customer.pl

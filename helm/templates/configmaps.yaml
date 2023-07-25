@@ -15,8 +15,9 @@ data:
   ZNUNY_DATABASE_USER: {{ .Values.config.database.user }}
   ZNUNY_DATABASE_PASSWORD: {{ .Values.config.database.password }}
   # Settings: Web server
+  ZNUNY_APACHE_DOMAIN: {{ .Values.config.apache.domain }}
   ZNUNY_APACHE_REWRITE_RULES: |-
-  {{- range .Values.config.webServer.rewriteRules }}
+  {{- range .Values.config.apache.rewriteRules }}
     {{ . }}
   {{- end }}
   # Settings: Users

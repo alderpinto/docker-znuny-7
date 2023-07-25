@@ -27,6 +27,8 @@ environment_variables:
     help: The mailing user
   - name: ZNUNY_MAILING_PASSWORD
     help: The mailing password
+  - name: ZNUNY_APACHE_DOMAIN
+    help: The application domain
   - name: ZNUNY_APACHE_REWRITE_RULE_1
     help: A custom rewrite rule
   - name: ZNUNY_APACHE_REWRITE_RULE_2
@@ -217,6 +219,13 @@ commands:
 
   - name: run
     help: Run Znuny
+    commands:
+      - name: cron
+        help: Run the crons of Znuny
+      - name: deamon
+        help: Run the deamon of Znuny
+      - name: znuny
+        help: Run Znuny
 
   - name: user
     help: Manage users

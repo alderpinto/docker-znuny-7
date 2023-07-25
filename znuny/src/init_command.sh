@@ -20,6 +20,6 @@ zcli user admin
 
 # zcli dev
 
-zcli run
+zcli run znuny
 
 # sleep 1000000

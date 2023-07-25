@@ -119,6 +119,11 @@ zcli_usage() {
     echo
 
     # :environment_variable.usage
+    printf "  %s\n" "ZNUNY_APACHE_DOMAIN"
+    printf "    The application domain\n"
+    echo
+
+    # :environment_variable.usage
     printf "  %s\n" "ZNUNY_APACHE_REWRITE_RULE_1"
     printf "    A custom rewrite rule\n"
     echo
@@ -912,8 +917,101 @@ zcli_run_usage() {
   fi
 
   printf "%s\n" "Usage:"
-  printf "  zcli run\n"
-  printf "  zcli run --help | -h\n"
+  printf "  zcli run COMMAND\n"
+  printf "  zcli run [COMMAND] --help | -h\n"
+  echo
+  # :command.usage_commands
+  printf "%s\n" "Commands:"
+  printf "  %s   Run the crons of Znuny\n" "cron  "
+  printf "  %s   Run the deamon of Znuny\n" "deamon"
+  printf "  %s   Run Znuny\n" "znuny "
+  echo
+
+  # :command.long_usage
+  if [[ -n $long_usage ]]; then
+    printf "%s\n" "Options:"
+
+    # :command.usage_fixed_flags
+    printf "  %s\n" "--help, -h"
+    printf "    Show this help\n"
+    echo
+
+  fi
+}
+
+# :command.usage
+zcli_run_cron_usage() {
+  if [[ -n $long_usage ]]; then
+    printf "zcli run cron - Run the crons of Znuny\n"
+    echo
+
+  else
+    printf "zcli run cron - Run the crons of Znuny\n"
+    echo
+
+  fi
+
+  printf "%s\n" "Usage:"
+  printf "  zcli run cron\n"
+  printf "  zcli run cron --help | -h\n"
+  echo
+
+  # :command.long_usage
+  if [[ -n $long_usage ]]; then
+    printf "%s\n" "Options:"
+
+    # :command.usage_fixed_flags
+    printf "  %s\n" "--help, -h"
+    printf "    Show this help\n"
+    echo
+
+  fi
+}
+
+# :command.usage
+zcli_run_deamon_usage() {
+  if [[ -n $long_usage ]]; then
+    printf "zcli run deamon - Run the deamon of Znuny\n"
+    echo
+
+  else
+    printf "zcli run deamon - Run the deamon of Znuny\n"
+    echo
+
+  fi
+
+  printf "%s\n" "Usage:"
+  printf "  zcli run deamon\n"
+  printf "  zcli run deamon --help | -h\n"
+  echo
+
+  # :command.long_usage
+  if [[ -n $long_usage ]]; then
+    printf "%s\n" "Options:"
+
+    # :command.usage_fixed_flags
+    printf "  %s\n" "--help, -h"
+    printf "    Show this help\n"
+    echo
+
+  fi
+}
+
+# :command.usage
+zcli_run_znuny_usage() {
+  if [[ -n $long_usage ]]; then
+    printf "zcli run znuny - Run Znuny\n"
+    echo
+
+  else
+    printf "zcli run znuny - Run Znuny\n"
+    echo
+
+  fi
+
+  printf "%s\n" "Usage:"
+  printf "  zcli run znuny\n"
+  printf "  zcli run znuny --help | -h\n"
   echo
 
   # :command.long_usage
@@ -1103,6 +1201,62 @@ inspect_args() {
 }
 
 # :command.user_lib
+# src/lib/apache.sh
+APACHE_CONFIG_PATH="/etc/apache2/apache2.conf"
+
+function gen_add_apache2_main_conf() {
+  DOMAIN=${1-_default_}
+  CONTENT=$(cat << EOF > ${APACHE_CONFIG_PATH}
+ServerName ${DOMAIN}
+DefaultRuntimeDir \${APACHE_RUN_DIR}
+PidFile \${APACHE_PID_FILE}
+Timeout 300
+KeepAlive On
+MaxKeepAliveRequests 100
+KeepAliveTimeout 5
+User \${APACHE_RUN_USER}
+Group \${APACHE_RUN_GROUP}
+HostnameLookups Off
+ErrorLog \${APACHE_LOG_DIR}/error.log
+LogLevel info
+IncludeOptional mods-enabled/*.load
+IncludeOptional mods-enabled/*.conf
+Include ports.conf
+# <Directory />
+# 	Options FollowSymLinks
+# 	AllowOverride None
+# 	Require all denied
+# </Directory>
+#
+# <Directory /usr/share>
+# 	AllowOverride None
+# 	Require all granted
+# </Directory>
+#
+# <Directory /var/www/>
+# 	Options Indexes FollowSymLinks
+# 	AllowOverride None
+# 	Require all granted
+# </Directory>
+#
+# AccessFileName .htaccess
+# <FilesMatch "^\.ht">
+# 	Require all denied
+# </FilesMatch>
+
+LogFormat "%v:%p %h %l %u %t \"%r\" %>s %O \"%{Referer}i\" \"%{User-Agent}i\"" vhost_combined
+LogFormat "%h %l %u %t \"%r\" %>s %O \"%{Referer}i\" \"%{User-Agent}i\"" combined
+LogFormat "%h %l %u %t \"%r\" %>s %O" common
+LogFormat "%{Referer}i -> %U" referer
+LogFormat "%{User-agent}i" agent
+LogFormat "{\"time\":\"%t\",\"remoteIP\":\"%a\",\"host\":\"%V\",\"request\":\"%U\",\"query\":\"%q\",\"method\":\"%m\",\"status\":\"%>s\",\"userAgent\":\"%{User-agent}i\",\"referer\":\"%{Referer}i\"}" znuny
+
+IncludeOptional conf-enabled/*.conf
+
+EOF
+)
+}
+
 # src/lib/config.sh
 config_init() {
   CONFIG_FILE=${CONFIG_FILE:=config.ini}
@@ -1608,6 +1762,8 @@ zcli_config_apache_command() {
   # src/config_apache_command.sh
   set_env_znuny
 
+  gen_add_apache2_main_conf "${ZNUNY_APACHE_DOMAIN}"
+
   customLogger "info" "config_apache" "Create the virtualhost to expose Znuny"
   ln -s /opt/otrs/scripts/apache2-httpd.include.conf /etc/apache2/conf-available/zzz_znuny.conf || true
 
@@ -1624,9 +1780,7 @@ zcli_config_apache_command() {
     echo -e "</IfModule>\n" >> /etc/apache2/conf-available/zzz_znuny.conf
   fi
 
-  #echo -e "ErrorLogFormat \"{ \\"time\\":\\"%{%Y-%m-%d}tT%{%T}t.%{msec_frac}tZ\\", \\"function\\" : \\"[%-m:%l]\\" , \\"process\\" : \\"[pid %P:tid %T]\\" , \\"message\\" : \\"%M\\" , \\"referer\\"\\ : \\"%{Referer}i\\" },\""
-
-  #echo -e "LogFormat \\"{ \\"time\\":\\"%{%Y-%m-%d}tT%{%T}t.%{msec_frac}tZ\\", \\"process\\":\\"%D\\", \\"filename\\":\\"%f\\", \\"remoteIP\\":\\"%a\\", \\"host\\":\\"%V\\", \\"request\\":\\"%U\\", \\"query\\":\\"%q\\", \\"method\\":\\"%m\\", \\"status\\":\\"%>s\\", \\"userAgent\\":\\"%{User-agent}i\\", \\"referer\\":\\"%{Referer}i\\" },\" combined"
+  echo -e "CustomLog \${APACHE_LOG_DIR}/znuny.log znuny" >> /etc/apache2/conf-available/zzz_znuny.conf
 
   customLogger "info" "config_apache" "Enable required Apache modules - Part 1"
   a2enmod perl headers deflate filter cgi 2>&1>/dev/null
@@ -1667,7 +1821,7 @@ zcli_config_customers_command() {
 # :command.function
 zcli_config_database_command() {
   # src/config_database_command.sh
-  sleep 30
+  sleep 10
 
   case ${ZNUNY_DATABASE_TYPE} in
     "mysql")
@@ -1871,7 +2025,7 @@ zcli_init_command() {
 
   # zcli dev
 
-  zcli run
+  zcli run znuny
 
   # sleep 1000000
 
@@ -1915,13 +2069,30 @@ zcli_migration_local_command() {
 }
 
 # :command.function
-zcli_run_command() {
-  # src/run_command.sh
+zcli_run_cron_command() {
+  # src/run_cron_command.sh
+  su -c "/opt/otrs/bin/Cron.sh start | jq -Rc '{"message": .}'" -s /bin/bash otrs
+
+}
+
+# :command.function
+zcli_run_deamon_command() {
+  # src/run_deamon_command.sh
+  # su -c "/opt/otrs/bin/otrs.Daemon.pl start | grep -E '[A-Za-z0-9]+' | jq -Rc --unbuffered --stream '{"message": .}'" -s /bin/sh otrs
+  # su -c "/opt/otrs/bin/otrs.Daemon.pl start | awk '/[A-Za-z0-9]+/ { print \"{\\\"timestamp\\\": \" systime() \", \\\"message\\\": \\\"\" \$0 \"\\\"}\" }'" -s /bin/sh otrs
+  #su -c "/opt/otrs/bin/otrs.Daemon.pl start | awk '/[A-Za-z0-9]+/ { print \"{ \\\"message\\\": \\\"\" \$0 \"\\\"}\" }' -s /bin/sh otrs
+  echo ok
+
+}
+
+# :command.function
+zcli_run_znuny_command() {
+  # src/run_znuny_command.sh
   customLogger "info" "run" "Launch the daemon of Znuny"
-  su -c "/opt/otrs/bin/otrs.Daemon.pl start" -s /bin/sh otrs
+  zcli run deamon
 
   customLogger "info" "run" "Launch Crons of Znuny"
-  su -c "/opt/otrs/bin/Cron.sh start" -s /bin/bash otrs
+  zcli run cron
 
   customLogger "info" "run" "Launch the web server"
   /usr/sbin/apache2ctl -D FOREGROUND
@@ -3142,7 +3313,176 @@ zcli_run_parse_requirements() {
   done
 
   # :command.command_filter
-  action="run"
+  action=${1:-}
+
+  case $action in
+    -*) ;;
+
+    cron)
+      action="cron"
+      shift
+      zcli_run_cron_parse_requirements "$@"
+      shift $#
+      ;;
+
+    deamon)
+      action="deamon"
+      shift
+      zcli_run_deamon_parse_requirements "$@"
+      shift $#
+      ;;
+
+    znuny)
+      action="znuny"
+      shift
+      zcli_run_znuny_parse_requirements "$@"
+      shift $#
+      ;;
+
+    # :command.command_fallback
+    "")
+      zcli_run_usage >&2
+      exit 1
+      ;;
+
+    *)
+      printf "invalid command: %s\n" "$action" >&2
+      exit 1
+      ;;
+
+  esac
+
+  # :command.parse_requirements_while
+  while [[ $# -gt 0 ]]; do
+    key="$1"
+    case "$key" in
+
+      -?*)
+        printf "invalid option: %s\n" "$key" >&2
+        exit 1
+        ;;
+
+      *)
+        # :command.parse_requirements_case
+        # :command.parse_requirements_case_simple
+        printf "invalid argument: %s\n" "$key" >&2
+        exit 1
+
+        ;;
+
+    esac
+  done
+
+}
+
+# :command.parse_requirements
+zcli_run_cron_parse_requirements() {
+  # :command.fixed_flags_filter
+  while [[ $# -gt 0 ]]; do
+    case "${1:-}" in
+      --help | -h)
+        long_usage=yes
+        zcli_run_cron_usage
+        exit
+        ;;
+
+      *)
+        break
+        ;;
+
+    esac
+  done
+
+  # :command.command_filter
+  action="run cron"
+
+  # :command.parse_requirements_while
+  while [[ $# -gt 0 ]]; do
+    key="$1"
+    case "$key" in
+
+      -?*)
+        printf "invalid option: %s\n" "$key" >&2
+        exit 1
+        ;;
+
+      *)
+        # :command.parse_requirements_case
+        # :command.parse_requirements_case_simple
+        printf "invalid argument: %s\n" "$key" >&2
+        exit 1
+
+        ;;
+
+    esac
+  done
+
+}
+
+# :command.parse_requirements
+zcli_run_deamon_parse_requirements() {
+  # :command.fixed_flags_filter
+  while [[ $# -gt 0 ]]; do
+    case "${1:-}" in
+      --help | -h)
+        long_usage=yes
+        zcli_run_deamon_usage
+        exit
+        ;;
+
+      *)
+        break
+        ;;
+
+    esac
+  done
+
+  # :command.command_filter
+  action="run deamon"
+
+  # :command.parse_requirements_while
+  while [[ $# -gt 0 ]]; do
+    key="$1"
+    case "$key" in
+
+      -?*)
+        printf "invalid option: %s\n" "$key" >&2
+        exit 1
+        ;;
+
+      *)
+        # :command.parse_requirements_case
+        # :command.parse_requirements_case_simple
+        printf "invalid argument: %s\n" "$key" >&2
+        exit 1
+
+        ;;
+
+    esac
+  done
+
+}
+
+# :command.parse_requirements
+zcli_run_znuny_parse_requirements() {
+  # :command.fixed_flags_filter
+  while [[ $# -gt 0 ]]; do
+    case "${1:-}" in
+      --help | -h)
+        long_usage=yes
+        zcli_run_znuny_usage
+        exit
+        ;;
+
+      *)
+        break
+        ;;
+
+    esac
+  done
+
+  # :command.command_filter
+  action="run znuny"
 
   # :command.parse_requirements_while
   while [[ $# -gt 0 ]]; do
@@ -3421,6 +3761,9 @@ run() {
     "migration s3") zcli_migration_s3_command ;;
     "migration local") zcli_migration_local_command ;;
     "run") zcli_run_command ;;
+    "run cron") zcli_run_cron_command ;;
+    "run deamon") zcli_run_deamon_command ;;
+    "run znuny") zcli_run_znuny_command ;;
     "user") zcli_user_command ;;
     "user admin") zcli_user_admin_command ;;
     "user permissions") zcli_user_permissions_command ;;

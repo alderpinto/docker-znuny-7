@@ -1,0 +1,36 @@
+apiVersion: k3d.io/v1alpha5
+kind: Simple
+metadata:
+  name: znuny
+servers: 3
+agents: 3
+kubeAPI:
+  host: "znuny.domain.tld"
+  hostIP: "127.0.0.1"
+  hostPort: "7777"
+image: rancher/k3s:v1.26.6-k3s1
+token: znunuySecretToken
+subnet: "172.30.0.0/16"
+ports:
+  - port: 8080:80
+    nodeFilters:
+      - loadbalancer
+options:
+  k3d:
+    wait: true
+    timeout: "60s"
+    disableLoadbalancer: false
+    disableImageVolume: false
+    disableRollback: false
+    loadbalancer:
+      configOverrides:
+        - settings.workerConnections=2048
+  k3s: # options passed on to K3s itself
+    extraArgs: # additional arguments passed to the `k3s server|agent` command; same as `--k3s-arg`
+      - arg: "--tls-san=znuny.domain.tld"
+        nodeFilters:
+          - server:*
+  kubeconfig:
+    updateDefaultKubeconfig: true
+    switchCurrentContext: true
+

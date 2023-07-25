@@ -1,4 +1,4 @@
-sleep 30
+sleep 10
 
 case ${ZNUNY_DATABASE_TYPE} in
   "mysql")
