@@ -7,6 +7,10 @@ metadata:
   labels:
     service: {{ .Release.Name }}
 data:
+  {{- if .Values.config.logs.path }}
+  # Settings: Logs
+  ZNUNY_LOGS_PATH: {{ .Values.config.logs.path }}
+  {{- end }}
   # Settings: Database
   ZNUNY_DATABASE_TYPE: {{ .Values.config.database.type }}
   ZNUNY_DATABASE_HOST: {{ .Values.config.database.host }}

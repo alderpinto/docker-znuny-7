@@ -14,6 +14,8 @@ services:
     depends_on:
       - mariadb
     environment:
+      # Settings: Logs
+      ZNUNY_LOG_PATH: /var/log/znuny
       # Settings: Database
       ZNUNY_DATABASE_TYPE: mysql
       ZNUNY_DATABASE_HOST: mariadb

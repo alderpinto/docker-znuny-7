@@ -174,6 +174,53 @@ function gen_add_agents_synchro() {
   echo "" >> ${CONFIG_PATH}
 }
 
+function gen_add_log_file() {
+  LOGPATH=${1}
+  CONTENT=$(cat << EOF | tee -a ${CONFIG_PATH}
+    # --------------------------------------------------- #
+    # LogModule                                           #
+    # --------------------------------------------------- #
+    # (log backend module)
+    \$Self->{'LogModule'} = 'Kernel::System::Log::File';
+
+    # param for LogModule Kernel::System::Log::File (required!)
+    \$Self->{'LogModule::LogFile'} = '${LOGPATH}';
+
+    # param if the date (yyyy-mm) should be added as suffix to
+    # logfile [0|1]
+    \$Self->{'LogModule::LogFile::Date'} = 0;
+
+    # system log cache size for admin system log (default 32k)
+    \$Self->{'LogSystemCacheSize'} = 32 * 1024;
+
+EOF
+)
+}
+
+function gen_add_log_rsyslog() {
+  CONTENT=$(cat << EOF | tee -a ${CONFIG_PATH}
+    # --------------------------------------------------- #
+    # LogModule                                           #
+    # --------------------------------------------------- #
+    # (log backend module)
+    \$Self->{LogModule} = 'Kernel::System::Log::SysLog';
+
+    # param for LogModule Kernel::System::Log::SysLog
+    \$Self->{'LogModule::SysLog::Facility'} = 'user';
+
+    # param for LogModule Kernel::System::Log::SysLog
+    # (if syslog can't work with utf-8, force the log
+    # charset with this option, on other chars will be
+    # replaces with ?)
+    \$Self->{'LogModule::SysLog::Charset'} = 'utf-8';
+
+    # system log cache size for admin system log (default 32k)
+    \$Self->{'LogSystemCacheSize'} = 32 * 1024;
+
+EOF
+)
+}
+
 function gen_add_return() {
   CONTENT=$(cat << EOF | tee -a ${CONFIG_PATH}
     return 1;

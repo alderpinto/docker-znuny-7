@@ -1,9 +1,9 @@
 ## Catch app logs to format them in JSON - **v6.5.3-2**
 
-- [ ] - Catch all application logs
-- [ ] - Format logs
-- [ ] - Write logs in STDOUT
-- [ ] - Write logs in a file
+- [X] - Catch all application logs
+- [X] - Format logs
+- [X] - Write logs in STDOUT
+- [X] - Write logs in a file
 
 ## Add support to PostgreSQL - **v6.5.3-3**
 

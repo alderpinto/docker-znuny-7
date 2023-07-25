@@ -1,8 +1,10 @@
 name: zcli
 help: Simple cli to manage the container of znuny
-version: 6.5.3.1
+version: 6.5.3-2
 
 environment_variables:
+  - name: ZNUNY_LOG_PATH
+    help: The log file path
   - name: ZNUNY_DATABASE_TYPE
     help: The database type (mysql, pgsql)
   - name: ZNUNY_DATABASE_HOST
@@ -222,8 +224,8 @@ commands:
     commands:
       - name: cron
         help: Run the crons of Znuny
-      - name: deamon
-        help: Run the deamon of Znuny
+      - name: daemon
+        help: Run the daemon of Znuny
       - name: znuny
         help: Run Znuny
 

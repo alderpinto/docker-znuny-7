@@ -82,6 +82,13 @@ for i in {1..9}; do
   fi
 done
 
+if [[ ! -z ${ZNUNY_LOG_PATH} ]]; then
+  gen_add_log_file "${ZNUNY_LOG_PATH}"
+  touch /var/log/znuny && chown ${APP_USER} /var/log/znuny
+else
+  gen_add_log_rsyslog 
+fi
+
 customLogger "info" "config_znuny" "Generate the configuration return"
 gen_add_return
 

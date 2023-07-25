@@ -59,6 +59,11 @@ zcli_usage() {
     printf "%s\n" "Environment Variables:"
 
     # :environment_variable.usage
+    printf "  %s\n" "ZNUNY_LOG_PATH"
+    printf "    The log file path\n"
+    echo
+
+    # :environment_variable.usage
     printf "  %s\n" "ZNUNY_DATABASE_TYPE"
     printf "    The database type (mysql, pgsql)\n"
     echo
@@ -923,7 +928,7 @@ zcli_run_usage() {
   # :command.usage_commands
   printf "%s\n" "Commands:"
   printf "  %s   Run the crons of Znuny\n" "cron  "
-  printf "  %s   Run the deamon of Znuny\n" "deamon"
+  printf "  %s   Run the daemon of Znuny\n" "daemon"
   printf "  %s   Run Znuny\n" "znuny "
   echo
 
@@ -969,20 +974,20 @@ zcli_run_cron_usage() {
 }
 
 # :command.usage
-zcli_run_deamon_usage() {
+zcli_run_daemon_usage() {
   if [[ -n $long_usage ]]; then
-    printf "zcli run deamon - Run the deamon of Znuny\n"
+    printf "zcli run daemon - Run the daemon of Znuny\n"
     echo
 
   else
-    printf "zcli run deamon - Run the deamon of Znuny\n"
+    printf "zcli run daemon - Run the daemon of Znuny\n"
     echo
 
   fi
 
   printf "%s\n" "Usage:"
-  printf "  zcli run deamon\n"
-  printf "  zcli run deamon --help | -h\n"
+  printf "  zcli run daemon\n"
+  printf "  zcli run daemon --help | -h\n"
   echo
 
   # :command.long_usage
@@ -1503,7 +1508,7 @@ function customLogger() {
   MESSAGE=${3}
 
   cat << EOF
-{"timestamp": "${TIMESTAMP}","level": "${LEVEL}","source": "${SOURCE}","message": "${MESSAGE}"}
+{"timestamp":"${TIMESTAMP}", "level":"${LEVEL}", "source":"${SOURCE}", "message":"${MESSAGE}"}
 EOF
 }
 
@@ -1705,6 +1710,53 @@ function gen_add_agents_synchro() {
   done <<< "${BLOCK}"
 
   echo "" >> ${CONFIG_PATH}
+}
+
+function gen_add_log_file() {
+  LOGPATH=${1}
+  CONTENT=$(cat << EOF | tee -a ${CONFIG_PATH}
+    # --------------------------------------------------- #
+    # LogModule                                           #
+    # --------------------------------------------------- #
+    # (log backend module)
+    \$Self->{'LogModule'} = 'Kernel::System::Log::File';
+
+    # param for LogModule Kernel::System::Log::File (required!)
+    \$Self->{'LogModule::LogFile'} = '${LOGPATH}';
+
+    # param if the date (yyyy-mm) should be added as suffix to
+    # logfile [0|1]
+    \$Self->{'LogModule::LogFile::Date'} = 0;
+
+    # system log cache size for admin system log (default 32k)
+    \$Self->{'LogSystemCacheSize'} = 32 * 1024;
+
+EOF
+)
+}
+
+function gen_add_log_rsyslog() {
+  CONTENT=$(cat << EOF | tee -a ${CONFIG_PATH}
+    # --------------------------------------------------- #
+    # LogModule                                           #
+    # --------------------------------------------------- #
+    # (log backend module)
+    \$Self->{LogModule} = 'Kernel::System::Log::SysLog';
+
+    # param for LogModule Kernel::System::Log::SysLog
+    \$Self->{'LogModule::SysLog::Facility'} = 'user';
+
+    # param for LogModule Kernel::System::Log::SysLog
+    # (if syslog can't work with utf-8, force the log
+    # charset with this option, on other chars will be
+    # replaces with ?)
+    \$Self->{'LogModule::SysLog::Charset'} = 'utf-8';
+
+    # system log cache size for admin system log (default 32k)
+    \$Self->{'LogSystemCacheSize'} = 32 * 1024;
+
+EOF
+)
 }
 
 function gen_add_return() {
@@ -1945,6 +1997,13 @@ zcli_config_znuny_command() {
     fi
   done
 
+  if [[ ! -z ${ZNUNY_LOG_PATH} ]]; then
+    gen_add_log_file "${ZNUNY_LOG_PATH}"
+  else
+    gen_add_log_rsyslog
+
+  fi
+
   customLogger "info" "config_znuny" "Generate the configuration return"
   gen_add_return
 
@@ -1960,11 +2019,25 @@ zcli_config_znuny_command() {
 zcli_check_modules_command() {
   # src/check_modules_command.sh
   customLogger "info" "check_modules" "Check Perl modules"
-  su -c "/opt/otrs/bin/otrs.CheckModules.pl --all 2>&1>/dev/null" -s /bin/bash otrs
+  su -c "/opt/otrs/bin/otrs.CheckModules.pl --all 2>&1>/dev/null" -s /bin/bash otrs 2>&1 |\
+    while true; do
+      if IFS= read -r MESSAGE; then
+        if [[ -n "${MESSAGE}" ]]; then
+          echo -e "{\"timestamp\":\"$(date +'%Y-%m-%d %H:%M:%S')\", \"level\":\"info\", \"source\":\"znuny\", \"message\":\"${MESSAGE}\"}"
+        fi
+      fi
+    done &
 
   # customLogger "info" "check_modules" "Ensure all packages are installed"
   customLogger "info" "check_modules" "Check packages installations"
-  su -c "/opt/otrs/bin/otrs.Console.pl Admin::Package::ReinstallAll" -s /bin/bash otrs
+  su -c "/opt/otrs/bin/otrs.Console.pl Admin::Package::ReinstallAll" -s /bin/bash otrs 2>&1 |\
+    while true; do
+      if IFS= read -r MESSAGE; then
+        if [[ -n "${MESSAGE}" ]]; then
+          echo -e "{\"timestamp\":\"$(date +'%Y-%m-%d %H:%M:%S')\", \"level\":\"info\", \"source\":\"znuny\", \"message\":\"${MESSAGE}\"}"
+        fi
+      fi
+    done &
 
 }
 
@@ -1972,7 +2045,14 @@ zcli_check_modules_command() {
 zcli_check_config_command() {
   # src/check_config_command.sh
   customLogger "info" "check_config" "Rebuild configuration"
-  su -c "/opt/otrs/bin/otrs.Console.pl Maint::Config::Rebuild --cleanup" -s /bin/sh otrs
+  su -c "/opt/otrs/bin/otrs.Console.pl Maint::Config::Rebuild --cleanup" -s /bin/sh otrs 2>&1 |\
+    while true; do
+      if IFS= read -r MESSAGE; then
+        if [[ -n "${MESSAGE}" ]]; then
+          echo -e "{\"timestamp\":\"$(date +'%Y-%m-%d %H:%M:%S')\", \"level\":\"info\", \"source\":\"znuny\", \"message\":\"${MESSAGE}\"}"
+        fi
+      fi
+    done &
 
 }
 
@@ -2071,17 +2151,28 @@ zcli_migration_local_command() {
 # :command.function
 zcli_run_cron_command() {
   # src/run_cron_command.sh
-  su -c "/opt/otrs/bin/Cron.sh start | jq -Rc '{"message": .}'" -s /bin/bash otrs
+  su -c "/opt/otrs/bin/Cron.sh start" -s /bin/sh otrs 2>&1 | \
+    while true; do
+      if IFS= read -r MESSAGE; then
+        if [[ -n "${MESSAGE}" ]]; then
+          echo -e "{\"timestamp\":\"$(date +'%Y-%m-%d %H:%M:%S')\", \"level\":\"info\", \"source\":\"znuny\", \"message\":\"${MESSAGE}\"}"
+        fi
+      fi
+    done
 
 }
 
 # :command.function
-zcli_run_deamon_command() {
-  # src/run_deamon_command.sh
-  # su -c "/opt/otrs/bin/otrs.Daemon.pl start | grep -E '[A-Za-z0-9]+' | jq -Rc --unbuffered --stream '{"message": .}'" -s /bin/sh otrs
-  # su -c "/opt/otrs/bin/otrs.Daemon.pl start | awk '/[A-Za-z0-9]+/ { print \"{\\\"timestamp\\\": \" systime() \", \\\"message\\\": \\\"\" \$0 \"\\\"}\" }'" -s /bin/sh otrs
-  #su -c "/opt/otrs/bin/otrs.Daemon.pl start | awk '/[A-Za-z0-9]+/ { print \"{ \\\"message\\\": \\\"\" \$0 \"\\\"}\" }' -s /bin/sh otrs
-  echo ok
+zcli_run_daemon_command() {
+  # src/run_daemon_command.sh
+  su -c "/opt/otrs/bin/otrs.Daemon.pl start" -s /bin/sh otrs 2>&1 | \
+    while true; do
+      if IFS= read -r MESSAGE; then
+        if [[ -n "${MESSAGE}" ]]; then
+          echo -e "{\"timestamp\":\"$(date +'%Y-%m-%d %H:%M:%S')\", \"level\":\"info\", \"source\":\"znuny\", \"message\":\"${MESSAGE}\"}"
+        fi
+      fi
+    done
 
 }
 
@@ -2089,10 +2180,10 @@ zcli_run_deamon_command() {
 zcli_run_znuny_command() {
   # src/run_znuny_command.sh
   customLogger "info" "run" "Launch the daemon of Znuny"
-  zcli run deamon
+  zcli run daemon &
 
   customLogger "info" "run" "Launch Crons of Znuny"
-  zcli run cron
+  zcli run cron &
 
   customLogger "info" "run" "Launch the web server"
   /usr/sbin/apache2ctl -D FOREGROUND
@@ -2102,8 +2193,15 @@ zcli_run_znuny_command() {
 # :command.function
 zcli_user_admin_command() {
   # src/user_admin_command.sh
-  customLogger "info" "user_system" "Create the application admin user: '${ZNUNY_USER_ADMIN_NAME}'"
-  su -c "/opt/otrs/bin/otrs.Console.pl Admin::User::SetPassword ${ZNUNY_USER_ADMIN_NAME} ${ZNUNY_USER_ADMIN_PASSWORD}" -s /bin/sh otrs
+  customLogger "info" "user_admin" "Create the application admin user: '${ZNUNY_USER_ADMIN_NAME}'"
+  su -c "/opt/otrs/bin/otrs.Console.pl Admin::User::SetPassword ${ZNUNY_USER_ADMIN_NAME} ${ZNUNY_USER_ADMIN_PASSWORD}" -s /bin/sh otrs 2>&1 |\
+    while true; do
+      if IFS= read -r MESSAGE; then
+        if [[ -n "${MESSAGE}" ]]; then
+          echo -e "{\"timestamp\":\"$(date +'%Y-%m-%d %H:%M:%S')\", \"level\":\"info\", \"source\":\"znuny\", \"message\":\"${MESSAGE}\"}"
+        fi
+      fi
+    done &
 
 }
 
@@ -2123,7 +2221,17 @@ zcli_user_system_command() {
   APP_USER="otrs"
 
   customLogger "info" "user_system" "Create the system user '${APP_USER}'"
-  useradd -d /opt/otrs -c 'Znuny user' -g www-data -s /bin/bash -M -N ${APP_USER} 2>&1>/dev/null || true
+  useradd -d /opt/otrs -c 'Znuny user' -g www-data -s /bin/bash -M -N ${APP_USER} 2>&1 |\
+    for ((i = 0; i < 3; i++)); do
+      if IFS= read -r MESSAGE; then
+        if [[ -n "${MESSAGE}" ]]; then
+          echo -e "{\"timestamp\":\"$(date +'%Y-%m-%d %H:%M:%S')\", \"level\":\"info\", \"source\":\"znuny\", \"message\":\"${MESSAGE}\"}"
+        fi
+      fi
+      sleep 1
+    done
+
+  touch /var/log/znuny && chown ${APP_USER} /var/log/znuny
 
   zcli user permissions
 
@@ -3325,10 +3433,10 @@ zcli_run_parse_requirements() {
       shift $#
       ;;
 
-    deamon)
-      action="deamon"
+    daemon)
+      action="daemon"
       shift
-      zcli_run_deamon_parse_requirements "$@"
+      zcli_run_daemon_parse_requirements "$@"
       shift $#
       ;;
 
@@ -3420,13 +3528,13 @@ zcli_run_cron_parse_requirements() {
 }
 
 # :command.parse_requirements
-zcli_run_deamon_parse_requirements() {
+zcli_run_daemon_parse_requirements() {
   # :command.fixed_flags_filter
   while [[ $# -gt 0 ]]; do
     case "${1:-}" in
       --help | -h)
         long_usage=yes
-        zcli_run_deamon_usage
+        zcli_run_daemon_usage
         exit
         ;;
 
@@ -3438,7 +3546,7 @@ zcli_run_deamon_parse_requirements() {
   done
 
   # :command.command_filter
-  action="run deamon"
+  action="run daemon"
 
   # :command.parse_requirements_while
   while [[ $# -gt 0 ]]; do
@@ -3722,7 +3830,7 @@ zcli_user_system_parse_requirements() {
 
 # :command.initialize
 initialize() {
-  version="6.5.3.1"
+  version="6.5.3-2"
   long_usage=''
   set -e
 
@@ -3762,7 +3870,7 @@ run() {
     "migration local") zcli_migration_local_command ;;
     "run") zcli_run_command ;;
     "run cron") zcli_run_cron_command ;;
-    "run deamon") zcli_run_deamon_command ;;
+    "run daemon") zcli_run_daemon_command ;;
     "run znuny") zcli_run_znuny_command ;;
     "user") zcli_user_command ;;
     "user admin") zcli_user_admin_command ;;

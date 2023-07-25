@@ -30,6 +30,10 @@ image:
   pullPolicy: IfNotPresent
 
 config:
+  logs: {}
+  # logs:
+  #   path: /var/log/znuny
+  
   database:
     type: mysql
     host: mariadb
