@@ -84,7 +84,9 @@ done
 
 if [[ ! -z ${ZNUNY_LOG_PATH} ]]; then
   gen_add_log_file "${ZNUNY_LOG_PATH}"
-  touch /var/log/znuny && chown ${APP_USER} /var/log/znuny
+  APP_USER="otrs"
+  touch /var/log/znuny
+  chown ${APP_USER} /var/log/znuny
 else
   gen_add_log_rsyslog 
 fi

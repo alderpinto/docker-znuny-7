@@ -7,8 +7,8 @@
 
 ## Add support to PostgreSQL - **v6.5.3-3**
 
-- [ ] - Test the docker compose integration
-- [ ] - Test the scripts initialization
+- [X] - Test the docker compose integration
+- [X] - Test the scripts initialization
 
 ## Databases migrations - **v6.5.3-4**
 

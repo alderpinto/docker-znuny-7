@@ -11,8 +11,6 @@ services:
     depends_on:
       - mariadb
     environment:
-      # # Settings: Logs
-      # ZNUNY_LOG_PATH: /var/log/znuny
       # Settings: Database
       ZNUNY_DATABASE_TYPE: mysql
       ZNUNY_DATABASE_HOST: mariadb
@@ -20,6 +18,8 @@ services:
       ZNUNY_DATABASE_NAME: znuny
       ZNUNY_DATABASE_USER: znuny
       ZNUNY_DATABASE_PASSWORD: password
+      # # Settings: Logs
+      ZNUNY_LOG_PATH: /var/log/znuny
       # Settings: Web server
       ZNUNY_APACHE_DOMAIN: znuny.domain.tld
       ZNUNY_APACHE_REWRITE_RULES: |-

@@ -1,9 +1,4 @@
----
 version: "3"
-
-volumes:
-  openldap_data:
-    driver: local
 
 # networks:
 #   net:
@@ -28,7 +23,7 @@ services:
     extends:
       file: compose/mariadb.yaml
       service: mariadb
-
+      
   postgresql:
     # networks:
     #   net:
@@ -36,13 +31,3 @@ services:
     extends:
       file: compose/postgresql.yaml
       service: postgresql
-
-  openldap:
-    # networks:
-    #   net:
-    #     ipv4_address: 172.30.0.14
-    volumes:
-      - openldap_data:/bitnami/openldap
-    extends:
-      file: compose/openldap.yaml
-      service: openldap

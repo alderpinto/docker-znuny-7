@@ -38,8 +38,9 @@ function database_check_pgsql() {
   USER=${4}
   PASSWORD=${5}
 
+  export PGPASSWORD=${PASSWORD}
   RESULT=$(psql -h ${HOST} -p${PORT} -U ${USER} -d ${NAME} \
-    -c "SELECT COUNT(*) FROM pg_catalog.pg_tables WHERE schemaname = '${NAME}';" 2>/dev/null | grep -eo '[0-9]+')
+    -c "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = 'public';" 2>/dev/null | grep -Eo '[0-9]+$')
 
   if [[ "${RESULT}" != "0" ]]; then
     return 0 # Database already initialize
@@ -53,12 +54,12 @@ function database_init_pgsql() {
   PORT=${2}
   NAME=${3}
   USER=${4}
-  PGPASSWORD=${5}
+  PASSWORD=${5}
 
-  psql -h ${HOST} -p${PORT} -U ${USER} -d ${NAME} -f /opt/otrs/scripts/database/schema.postgresql.sql
+  export PGPASSWORD=${PASSWORD}
+  psql -q -h ${HOST} -p${PORT} -U ${USER} -d ${NAME} -f /opt/otrs/scripts/database/schema.postgresql.sql
   sleep 1
-  psql -h ${HOST} -p${PORT} -U ${USER} -d ${NAME} -f /opt/otrs/scripts/database/initial_insert.postgresql.sql
+  psql -q -h ${HOST} -p${PORT} -U ${USER} -d ${NAME} -f /opt/otrs/scripts/database/initial_insert.postgresql.sql
   sleep 1
-  psql -h ${HOST} -p${PORT} -U ${USER} -d ${NAME} -f /opt/otrs/scripts/database/schema-post.postgresql.sql
-  
+  psql -q -h ${HOST} -p${PORT} -U ${USER} -d ${NAME} -f /opt/otrs/scripts/database/schema-post.postgresql.sql
 }
