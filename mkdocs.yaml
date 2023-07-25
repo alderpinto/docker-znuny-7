@@ -1,0 +1,67 @@
+site_name: Documentation
+site_url: https://znuny.aosc-portal.com
+
+nav:
+  - Overview: overview
+  - Roadmaps:
+    - v6.5.3-2: roadmaps/v6.5.3-2
+    - v6.5.3-3: roadmaps/v6.5.3-3
+    - v6.5.3-4: roadmaps/v6.5.3-4
+    - v6.5.3-5: roadmaps/v6.5.3-5
+  - Development:
+    - Apache: development/apache
+  - Helm:
+    - Chart: helm/chart
+
+markdown_extensions:
+  - abbr
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - tables
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight
+  - pymdownx.keys
+  - pymdownx.critic
+  - pymdownx.smartsymbols
+  - pymdownx.snippets
+  - pymdownx.inlinehilite
+  - pymdownx.caret
+  - pymdownx.mark
+  - pymdownx.tilde
+  - pymdownx.betterem
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji 
+      emoji_generator: !!python/name:materialx.emoji.to_svg
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.arithmatex:
+      generic: true
+
+theme:
+  logo: assets/znuny-logo.jpeg
+  name: material
+  palette:
+    - scheme: default
+      primary: orange
+      toggle:
+        icon: material/brightness-4
+        name: Switch to dark mode
+    - scheme: slate
+      primary: deep orange
+      toggle:
+        icon: material/brightness-7 
+        name: Switch to light mode
+  # features:
+  #   - navigation.expand
+  shortcuts:
+    help: 191    # ?
+    next: 78     # n
+    previous: 80 # p
+    search: 83   # s
+
+plugins:
+  - search
