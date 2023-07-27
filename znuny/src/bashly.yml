@@ -31,23 +31,7 @@ environment_variables:
     help: The mailing password
   - name: ZNUNY_APACHE_DOMAIN
     help: The application domain
-  - name: ZNUNY_APACHE_REWRITE_RULE_1
-    help: A custom rewrite rule
-  - name: ZNUNY_APACHE_REWRITE_RULE_2
-    help: A custom rewrite rule
-  - name: ZNUNY_APACHE_REWRITE_RULE_3
-    help: A custom rewrite rule
-  - name: ZNUNY_APACHE_REWRITE_RULE_4
-    help: A custom rewrite rule
-  - name: ZNUNY_APACHE_REWRITE_RULE_5
-    help: A custom rewrite rule
-  - name: ZNUNY_APACHE_REWRITE_RULE_6
-    help: A custom rewrite rule
-  - name: ZNUNY_APACHE_REWRITE_RULE_7
-    help: A custom rewrite rule
-  - name: ZNUNY_APACHE_REWRITE_RULE_8
-    help: A custom rewrite rule
-  - name: ZNUNY_APACHE_REWRITE_RULE_9
+  - name: ZNUNY_APACHE_REWRITE_RULES
     help: A custom rewrite rule
   - name: ZNUNY_CUSTOMER_BACKEND_1
     help: Customers authentication backend

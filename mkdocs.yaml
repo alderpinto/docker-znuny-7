@@ -8,10 +8,17 @@ nav:
     - v6.5.3-3: roadmaps/v6.5.3-3
     - v6.5.3-4: roadmaps/v6.5.3-4
     - v6.5.3-5: roadmaps/v6.5.3-5
-  - Development:
-    - Apache: development/apache
+  - Znuny:
+    - Introduction: znuny/introduction
+    - Installation: znuny/installation
+    - Configuration: znuny/configuration
+    - Commands: znuny/commands
+    - Development: znuny/development
   - Helm:
-    - Chart: helm/chart
+    - Introduction: helm/introduction
+    - Installation: helm/installation
+    - Configuration: helm/configuration
+    - Development: helm/development
 
 markdown_extensions:
   - abbr
