@@ -1,7 +1,7 @@
 apiVersion: k3d.io/v1alpha5
 kind: Simple
 metadata:
-  name: znuny
+  name: znuny-dev-cluster
 servers: 3
 agents: 3
 kubeAPI:
