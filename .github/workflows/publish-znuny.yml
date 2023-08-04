@@ -32,17 +32,22 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Set lower case repository name
+        run: |
+          #bash 4
+          echo "IMAGE_NAME_LC=${IMAGE_NAME,,}" >>${GITHUB_ENV}
+
       - name: Extract previous Docker metadata
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LC }}
 
       - name: Extract tag name
         id: extract-tag
         run: echo "GIT_TAG=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
 
-      - name: Build and push Docker image ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.GIT_TAG }}
+      - name: Build and push Docker image ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LC }}:${{ env.GIT_TAG }}
         id: build-and-push
         uses: docker/build-push-action@v3
         with:
@@ -50,19 +55,20 @@ jobs:
           file: ./znuny/Dockerfile
           push: true
           tags: |
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.GIT_TAG }}
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LC }}:${{ env.GIT_TAG }}
           labels: |
             ${{ steps.meta.outputs.labels }}
             ${{ github.ref }}
 
-      - name: Build and push Docker image ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+      - name: Build and push Docker image ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LC }}:latest
         uses: docker/build-push-action@v3
         with:
           context: .
           file: ./znuny/Dockerfile
           push: true
           tags: |
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LC }}:latest
           labels: |
             ${{ steps.meta.outputs.labels }}
             latest
+
