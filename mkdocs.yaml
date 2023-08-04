@@ -2,10 +2,10 @@ site_name: Documentation
 site_url: https://znuny.aosc-portal.com
 site_description: Deploy simply and quickly a reliable and performant ticketing application
 
-repo_url: https://github.com/mln-nicolas-b/docker-znuny
-repo_name: mln-nicolas-b/docker-znuny
+repo_url: https://github.com/FR-BEZ-AOSC/docker-znuny
+repo_name: FR-BEZ-AOSC/docker-znuny
 
-copyright: Copyright &copy; 2023 - 2023 Nicolas b
+copyright: Copyright &copy; 2023 - 2023 Eviden Open Source Center
 
 extra:
   social:
