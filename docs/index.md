@@ -1,4 +1,4 @@
-# Docker Znuny
+# Overview
 
 The aim of this project, centered on the znuny application, is to provide a reliable, 
 high-performance container image for quick and easy production.
@@ -9,8 +9,8 @@ are specifically designed for hosting on a Kubernetes platform.
 
 * Local users configuration
 * Support for multiple databases
-  * MariaDB
-  * PostgreSQL
+    * MariaDB
+    * PostgreSQL
 * Mailing configuration
 * Ldap authentication configuration
 * Log outputs formatted in JSON and configurable between rsyslog and file outputs

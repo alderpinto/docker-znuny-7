@@ -1,0 +1,18 @@
+---
+version: "3"
+
+services:
+  znuny:
+    image: ghcr.io/mln-nicolas-b/docker-znuny:6.5.3-1
+    container_name: znuny
+    hostname: znuny
+    environment:
+      ZNUNY_DATABASE_TYPE: mysql
+      ZNUNY_DATABASE_HOST: mariadb
+      ZNUNY_DATABASE_PORT: 3306
+      ZNUNY_DATABASE_NAME: znuny
+      ZNUNY_DATABASE_USER: znuny
+      ZNUNY_DATABASE_PASSWORD: password
+
+      ZNUNY_LOG_PATH: /var/log/znuny
+

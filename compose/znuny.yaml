@@ -3,7 +3,10 @@ version: "3"
 
 services:
   znuny:
-    image: ghcr.io/mln-nicolas-b/docker-znuny:6.5.3-1
+    build:
+      context: ..
+      dockerfile: ./znuny/Dockerfile
+    image: znuny:v6.5.3
     container_name: znuny
     hostname: znuny
     ports:
@@ -12,14 +15,22 @@ services:
       - mariadb
     environment:
       # Settings: Database
+      ### MySQL
       ZNUNY_DATABASE_TYPE: mysql
       ZNUNY_DATABASE_HOST: mariadb
       ZNUNY_DATABASE_PORT: 3306
       ZNUNY_DATABASE_NAME: znuny
       ZNUNY_DATABASE_USER: znuny
       ZNUNY_DATABASE_PASSWORD: password
-      # # Settings: Logs
-      ZNUNY_LOG_PATH: /var/log/znuny
+      ### PgSQL
+      # ZNUNY_DATABASE_TYPE: pgsql
+      # ZNUNY_DATABASE_HOST: postgresql
+      # ZNUNY_DATABASE_PORT: 5432
+      # ZNUNY_DATABASE_NAME: znuny
+      # ZNUNY_DATABASE_USER: znuny
+      # ZNUNY_DATABASE_PASSWORD: password
+      # Settings: Logs
+      # ZNUNY_LOG_PATH: /var/log/znuny
       # Settings: Web server
       ZNUNY_APACHE_DOMAIN: znuny.domain.tld
       ZNUNY_APACHE_REWRITE_RULES: |-
@@ -81,6 +92,6 @@ services:
       #       UserLastname  => 'sn',
       #       UserEmail     => 'mail',
       #   };
-      # Settings: Plugins
-      ZNUNY_CUSTOM_PLUGINS:
-        - efef
+      # # Settings: Plugins
+      # ZNUNY_CUSTOM_PLUGINS:
+      #   - efef

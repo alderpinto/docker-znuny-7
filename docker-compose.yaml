@@ -13,7 +13,7 @@ services:
     #   net:
     #     ipv4_address: 172.30.0.11
     extends:
-      file: compose/znuny-dev.yaml
+      file: compose/znuny.yaml
       service: znuny
 
   mariadb:

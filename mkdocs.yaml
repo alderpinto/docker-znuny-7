@@ -1,24 +1,43 @@
 site_name: Documentation
 site_url: https://znuny.aosc-portal.com
+site_description: Deploy simply and quickly a reliable and performant ticketing application
+
+repo_url: https://github.com/mln-nicolas-b/docker-znuny
+repo_name: mln-nicolas-b/docker-znuny
+
+copyright: Copyright &copy; 2023 - 2023 Nicolas b
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/mln-nicolas-b
+    - icon: fontawesome/brands/docker
+      link: https://github.com/mln-nicolas-b/docker-znuny/pkgs/container/docker-znuny
+    # - icon: fontawesome/brands/gitter
+    #   link: https://gitter.im/squidfunk/mkdocs-material
+    # - icon: fontawesome/brands/python
+    #   link: https://pypi.org/project/mkdocs-material/
+    # - icon: fontawesome/brands/mastodon
+    #   link: https://fosstodon.org/@squidfunk
+    # - icon: fontawesome/brands/twitter
+    #   link: https://twitter.com/squidfunk
 
 nav:
-  - Overview: overview
+  - Overview: index.md
+  - Znuny:
+    - Overview: znuny/overview
+    - Deployment: znuny/deployment
+    - Commands: znuny/commands
+    - Development: znuny/development
+  - Helm:
+    - Overview: helm/overview
+    - Deployment: helm/deployment
+    - Development: helm/development
   - Roadmaps:
     - v6.5.3-2: roadmaps/v6.5.3-2
     - v6.5.3-3: roadmaps/v6.5.3-3
     - v6.5.3-4: roadmaps/v6.5.3-4
     - v6.5.3-5: roadmaps/v6.5.3-5
-  - Znuny:
-    - Introduction: znuny/introduction
-    - Installation: znuny/installation
-    - Configuration: znuny/configuration
-    - Commands: znuny/commands
-    - Development: znuny/development
-  - Helm:
-    - Introduction: helm/introduction
-    - Installation: helm/installation
-    - Configuration: helm/configuration
-    - Development: helm/development
 
 markdown_extensions:
   - abbr
@@ -30,7 +49,6 @@ markdown_extensions:
   - tables
   - pymdownx.details
   - pymdownx.superfences
-  - pymdownx.highlight
   - pymdownx.keys
   - pymdownx.critic
   - pymdownx.smartsymbols
@@ -47,10 +65,18 @@ markdown_extensions:
       custom_checkbox: true
   - pymdownx.arithmatex:
       generic: true
+  - pymdownx.highlight
+  - pymdownx.tabbed:
+      alternate_style: true
+    # anchor_linenums: true
+    # line_spans: __span
+    # pygments_lang_class: true
 
 theme:
-  logo: assets/znuny-logo.jpeg
+  # logo: assets/znuny-logo.jpeg
   name: material
+  icon:
+    repo: fontawesome/brands/github
   palette:
     - scheme: default
       primary: orange
@@ -62,8 +88,10 @@ theme:
       toggle:
         icon: material/brightness-7 
         name: Switch to light mode
-  # features:
-  #   - navigation.expand
+  features:
+    - content.code.copy
+    - content.tabs.link 
+    - navigation.expand
   shortcuts:
     help: 191    # ?
     next: 78     # n
@@ -72,3 +100,4 @@ theme:
 
 plugins:
   - search
+  - git-revision-date-localized

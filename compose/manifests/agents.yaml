@@ -1,0 +1,38 @@
+---
+version: "3"
+
+services:
+  znuny:
+    image: ghcr.io/mln-nicolas-b/docker-znuny:6.5.3-1
+    container_name: znuny
+    hostname: znuny
+    environment:
+      ZNUNY_DATABASE_TYPE: mysql
+      ZNUNY_DATABASE_HOST: mariadb
+      ZNUNY_DATABASE_PORT: 3306
+      ZNUNY_DATABASE_NAME: znuny
+      ZNUNY_DATABASE_USER: znuny
+      ZNUNY_DATABASE_PASSWORD: password
+
+      ZNUNY_AGENT_BACKEND_1: |-
+        $$Self->{AuthModule} = 'Kernel::System::Auth::LDAP';
+        $$Self->{'AuthModule::LDAP::Host'} = 'ldap.example.com';
+        $$Self->{'AuthModule::LDAP::BaseDN'} = 'dc=example,dc=com';
+        $$Self->{'AuthModule::LDAP::UID'} = 'uid';
+        $$Self->{'AuthModule::LDAP::GroupDN'} = 'cn=znuny-allow,ou=posixGroups,dc=example,dc=com';
+        $$Self->{'AuthModule::LDAP::AccessAttr'} = 'memberUid';
+        $$Self->{'AuthModule::LDAP::UserAttr'} = 'UID';
+        $$Self->{'AuthModule::LDAP::UserAttr'} = 'DN';
+      ZNUNY_AGENT_SYNCHRO_1: |-
+        $$Self->{'AuthSyncModule'} = 'Kernel::System::Auth::Sync::LDAP';
+        $$Self->{'AuthSyncModule::LDAP::Host'} = 'ldap.example.com';
+        $$Self->{'AuthSyncModule::LDAP::BaseDN'} = 'dc=example,dc=com';
+        $$Self->{'AuthSyncModule::LDAP::UID'} = 'uid';
+        $$Self->{'AuthSyncModule::LDAP::SearchUserDN'} = '';
+        $$Self->{'AuthSyncModule::LDAP::SearchUserPw'} = '';
+        $$Self->{'AuthSyncModule::LDAP::AlwaysFilter'} = '';
+        $$Self->{'AuthSyncModule::LDAP::UserSyncMap'} = {
+            UserFirstname => 'givenName',
+            UserLastname  => 'sn',
+            UserEmail     => 'mail',
+        };
