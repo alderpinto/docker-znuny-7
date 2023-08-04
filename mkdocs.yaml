@@ -5,22 +5,19 @@ site_description: Deploy simply and quickly a reliable and performant ticketing 
 repo_url: https://github.com/FR-BEZ-AOSC/docker-znuny
 repo_name: FR-BEZ-AOSC/docker-znuny
 
-copyright: Copyright &copy; 2023 - 2023 Eviden Open Source Center
+copyright: Copyright &copy; 2022 - 2023 Eviden Open Source Center
 
 extra:
+  version:
+    provider: mike
+    default: stable
   social:
+    - icon: fontawesome/brands/readme
+      link: https://doc.znuny.org/znuny_lts
     - icon: fontawesome/brands/github
-      link: https://github.com/mln-nicolas-b
+      link: https://github.com/FR-BEZ-AOSC
     - icon: fontawesome/brands/docker
-      link: https://github.com/mln-nicolas-b/docker-znuny/pkgs/container/docker-znuny
-    # - icon: fontawesome/brands/gitter
-    #   link: https://gitter.im/squidfunk/mkdocs-material
-    # - icon: fontawesome/brands/python
-    #   link: https://pypi.org/project/mkdocs-material/
-    # - icon: fontawesome/brands/mastodon
-    #   link: https://fosstodon.org/@squidfunk
-    # - icon: fontawesome/brands/twitter
-    #   link: https://twitter.com/squidfunk
+      link: https://github.com/FR-BEZ-AOSC/docker-znuny/pkgs/container/docker-znuny
 
 nav:
   - Overview: index.md
@@ -99,5 +96,6 @@ theme:
     search: 83   # s
 
 plugins:
+  - mike
   - search
   - git-revision-date-localized
