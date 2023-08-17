@@ -41,4 +41,11 @@ Delete cluster :
 k3d cluster delete znuny-dev-cluster
 ```
 
+## Templating
+
+Create templates to check compliance of deployed resources from the project root :
+
+```bash
+helm template znuny ./helm
+```
 

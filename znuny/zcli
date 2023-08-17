@@ -34,13 +34,30 @@ zcli_usage() {
   echo
   # :command.usage_commands
   printf "%s\n" "Commands:"
-  printf "  %s   Manage the configuration of znuny\n" "config   "
-  printf "  %s   Check some features or resources\n" "check    "
-  printf "  %s   Download the znuny archive\n" "download "
-  printf "  %s   Initialize the container\n" "init     "
-  printf "  %s   Migrate an existing database from any source to the application database\n" "migration"
-  printf "  %s   Run Znuny\n" "run      "
-  printf "  %s   Manage users\n" "user     "
+  printf "  %s   Manage the configuration of znuny\n" "config            "
+  [[ -n $long_usage ]] && printf "  %s   Create virtualhosts\n" "config apache     "
+  [[ -n $long_usage ]] && printf "  %s   Create all crons\n" "config crons      "
+  [[ -n $long_usage ]] && printf "  %s   Create customers authentications\n" "config customers  "
+  [[ -n $long_usage ]] && printf "  %s   Initialize the database\n" "config database   "
+  [[ -n $long_usage ]] && printf "  %s   Create operators authentications\n" "config operators  "
+  [[ -n $long_usage ]] && printf "  %s   Create the main configuration file of Znuny\n" "config znuny      "
+  printf "  %s   Check some features or resources\n" "check             "
+  [[ -n $long_usage ]] && printf "  %s   Check Perl modules\n" "check modules     "
+  [[ -n $long_usage ]] && printf "  %s   Check the built configuration in database\n" "check config      "
+  printf "  %s   Download the znuny archive\n" "download          "
+  printf "  %s   Initialize the container\n" "init              "
+  printf "  %s   Migrate an existing database from any source to the application database\n" "migration         "
+  [[ -n $long_usage ]] && printf "  %s   Migrate an existing database from a working server\n" "migration database"
+  [[ -n $long_usage ]] && printf "  %s   Migrate an existing database from a dump file in an object storage\n" "migration s3      "
+  [[ -n $long_usage ]] && printf "  %s   Migrate an existing database from a dump file on the local filesystem\n" "migration local   "
+  printf "  %s   Run Znuny\n" "run               "
+  [[ -n $long_usage ]] && printf "  %s   Run the crons of Znuny\n" "run cron          "
+  [[ -n $long_usage ]] && printf "  %s   Run the daemon of Znuny\n" "run daemon        "
+  [[ -n $long_usage ]] && printf "  %s   Run Znuny\n" "run znuny         "
+  printf "  %s   Manage users\n" "user              "
+  [[ -n $long_usage ]] && printf "  %s   Create the admin user\n" "user admin        "
+  [[ -n $long_usage ]] && printf "  %s   Set the user permissions\n" "user permissions  "
+  [[ -n $long_usage ]] && printf "  %s   Create the system user\n" "user system       "
   echo
 
   # :command.long_usage
@@ -129,47 +146,7 @@ zcli_usage() {
     echo
 
     # :environment_variable.usage
-    printf "  %s\n" "ZNUNY_APACHE_REWRITE_RULE_1"
-    printf "    A custom rewrite rule\n"
-    echo
-
-    # :environment_variable.usage
-    printf "  %s\n" "ZNUNY_APACHE_REWRITE_RULE_2"
-    printf "    A custom rewrite rule\n"
-    echo
-
-    # :environment_variable.usage
-    printf "  %s\n" "ZNUNY_APACHE_REWRITE_RULE_3"
-    printf "    A custom rewrite rule\n"
-    echo
-
-    # :environment_variable.usage
-    printf "  %s\n" "ZNUNY_APACHE_REWRITE_RULE_4"
-    printf "    A custom rewrite rule\n"
-    echo
-
-    # :environment_variable.usage
-    printf "  %s\n" "ZNUNY_APACHE_REWRITE_RULE_5"
-    printf "    A custom rewrite rule\n"
-    echo
-
-    # :environment_variable.usage
-    printf "  %s\n" "ZNUNY_APACHE_REWRITE_RULE_6"
-    printf "    A custom rewrite rule\n"
-    echo
-
-    # :environment_variable.usage
-    printf "  %s\n" "ZNUNY_APACHE_REWRITE_RULE_7"
-    printf "    A custom rewrite rule\n"
-    echo
-
-    # :environment_variable.usage
-    printf "  %s\n" "ZNUNY_APACHE_REWRITE_RULE_8"
-    printf "    A custom rewrite rule\n"
-    echo
-
-    # :environment_variable.usage
-    printf "  %s\n" "ZNUNY_APACHE_REWRITE_RULE_9"
+    printf "  %s\n" "ZNUNY_APACHE_REWRITE_RULES"
     printf "    A custom rewrite rule\n"
     echo
 

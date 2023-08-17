@@ -13,12 +13,25 @@ Zcli can be used as following :
 The are many main commands which can be run :
 
 * `config`: *Manage the configuration of znuny*
+    * `apache`: *Create virtualhosts*
+    * `crons`: *Create all crons*
+    * `customers`: *Create customers authentications*
+    * `database`: *Initialize the database*
+    * `operators`: *Create operators authentications*
+    * `znuny`: *Create the main configuration file of Znuny*
 * `check`: *Check some features or resources*
+    * `modules`: *Check Perl modules*
+    * `config`: *Check the built configuration in database*
 * `download`: *Download the znuny archive*
 * `init`: *Initialize the container*
-* `migration`: *Migrate an existing database from any source to the application database*
 * `run`: *Run Znuny*
+    * `cron`: *Run the crons of Znuny*
+    * `daemon`: *Run the daemon of Znuny*
+    * `znuny`: *Run Znuny*
 * `user`: *Manage users*
+    * `admin`: *Create the admin user*
+    * `permissions`: *Set the user permissions*
+    * `system`: *Create the system user*
 
 ## Global options
 
@@ -53,84 +66,9 @@ Environement variables availables :
 * `ZNUNY_AGENTS_SYNCHRO_X`: *Agents authentication synchronization*
 
 !!!info
-    The environment variables ended by `_X` are variable which can be repeated.  
-    The charater `X` need to be replace by a number between 1 and 9.  
-    The use of other number will be ignored.
+    Environment variables ending in `_X` are repeatable variables and are therefore suffixed with a number.  
+    The `X` character must be replaced by a number between 1 and 9, allowing multiple LDAP connection backends to be configured.
 
-!!!example
-    ``` yaml title="compose/znuny.yaml" linenums="16" hl_lines="2 4 5 6 7 8 9 11 12 17 18 20 21 22 23 24 26 35 49 58 72"
-      environment:
-        ZNUNY_LOG_PATH: /var/log/znuny
+    Use of any other number will be ignored.
 
-        ZNUNY_DATABASE_TYPE: pgsql
-        ZNUNY_DATABASE_HOST: postgresql
-        ZNUNY_DATABASE_PORT: 5432
-        ZNUNY_DATABASE_NAME: znuny
-        ZNUNY_DATABASE_USER: znuny
-        ZNUNY_DATABASE_PASSWORD: password
-
-        ZNUNY_APACHE_DOMAIN: znuny.domain.tld
-        ZNUNY_APACHE_REWRITE_RULES: |-
-          RewriteRule ^/$ https://%{HTTP_HOST}/otrs/customer.pl
-          RewriteRule ^/otrs/$ https://%{HTTP_HOST}/otrs/customer.pl
-          RewriteRule ^/otrs$ https://%{HTTP_HOST}/otrs/customer.pl
-
-        ZNUNY_USER_ADMIN_NAME: root@localhost
-        ZNUNY_USER_ADMIN_PASSWORD: password
-
-        ZNUNY_MAILING_TYPE: external
-        ZNUNY_MAILING_HOST: smpt.domain.tld
-        ZNUNY_MAILING_PORT: 25
-        ZNUNY_MAILING_USER: znuny
-        ZNUNY_MAILING_PASSWORD: password
-
-        ZNUNY_CUSTOMER_BACKEND_1: |-
-          $$Self->{AuthModule} = 'Kernel::System::Auth::LDAP';
-          $$Self->{'AuthModule::LDAP::Host'} = 'ldap.example.com';
-          $$Self->{'AuthModule::LDAP::BaseDN'} = 'dc=example,dc=com';
-          $$Self->{'AuthModule::LDAP::UID'} = 'uid';
-          $$Self->{'AuthModule::LDAP::GroupDN'} = 'cn=znuny-allow,ou=posixGroups,dc=example,dc=com';
-          $$Self->{'AuthModule::LDAP::AccessAttr'} = 'memberUid';
-          $$Self->{'AuthModule::LDAP::UserAttr'} = 'UID';
-          $$Self->{'AuthModule::LDAP::UserAttr'} = 'DN';
-        ZNUNY_CUSTOMER_SYNCHRO_1: |-
-          $$Self->{'AuthSyncModule'} = 'Kernel::System::Auth::Sync::LDAP';
-          $$Self->{'AuthSyncModule::LDAP::Host'} = 'ldap.example.com';
-          $$Self->{'AuthSyncModule::LDAP::BaseDN'} = 'dc=example,dc=com';
-          $$Self->{'AuthSyncModule::LDAP::UID'} = 'uid';
-          $$Self->{'AuthSyncModule::LDAP::SearchUserDN'} = '';
-          $$Self->{'AuthSyncModule::LDAP::SearchUserPw'} = '';
-          $$Self->{'AuthSyncModule::LDAP::AlwaysFilter'} = '';
-          $$Self->{'AuthSyncModule::LDAP::UserSyncMap'} = {
-              UserFirstname => 'givenName',
-              UserLastname  => 'sn',
-              UserEmail     => 'mail',
-          };
-
-        ZNUNY_AGENT_BACKEND_1: |-
-          $$Self->{AuthModule} = 'Kernel::System::Auth::LDAP';
-          $$Self->{'AuthModule::LDAP::Host'} = 'ldap.example.com';
-          $$Self->{'AuthModule::LDAP::BaseDN'} = 'dc=example,dc=com';
-          $$Self->{'AuthModule::LDAP::UID'} = 'uid';
-          $$Self->{'AuthModule::LDAP::GroupDN'} = 'cn=znuny-allow,ou=posixGroups,dc=example,dc=com';
-          $$Self->{'AuthModule::LDAP::AccessAttr'} = 'memberUid';
-          $$Self->{'AuthModule::LDAP::UserAttr'} = 'UID';
-          $$Self->{'AuthModule::LDAP::UserAttr'} = 'DN';
-        ZNUNY_AGENT_SYNCHRO_1: |-
-          $$Self->{'AuthSyncModule'} = 'Kernel::System::Auth::Sync::LDAP';
-          $$Self->{'AuthSyncModule::LDAP::Host'} = 'ldap.example.com';
-          $$Self->{'AuthSyncModule::LDAP::BaseDN'} = 'dc=example,dc=com';
-          $$Self->{'AuthSyncModule::LDAP::UID'} = 'uid';
-          $$Self->{'AuthSyncModule::LDAP::SearchUserDN'} = '';
-          $$Self->{'AuthSyncModule::LDAP::SearchUserPw'} = '';
-          $$Self->{'AuthSyncModule::LDAP::AlwaysFilter'} = '';
-          $$Self->{'AuthSyncModule::LDAP::UserSyncMap'} = {
-              UserFirstname => 'givenName',
-              UserLastname  => 'sn',
-              UserEmail     => 'mail',
-          };
-
-        ZNUNY_CUSTOM_PLUGINS:
-          - plugins
-    ```
 
