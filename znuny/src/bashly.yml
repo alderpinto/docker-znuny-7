@@ -112,6 +112,7 @@ commands:
   #
   - name: config
     help: Manage the configuration of znuny
+    expose: true
     commands:
       - name: apache
         help: Create virtualhosts
@@ -128,6 +129,7 @@ commands:
 
   - name: check
     help: Check some features or resources
+    expose: true
     commands:
       - name: modules
         help: Check Perl modules
@@ -142,6 +144,7 @@ commands:
 
   - name: migration
     help: Migrate an existing database from any source to the application database
+    expose: true
     commands:
       - name: database
         help: Migrate an existing database from a working server
@@ -205,6 +208,7 @@ commands:
 
   - name: run
     help: Run Znuny
+    expose: true
     commands:
       - name: cron
         help: Run the crons of Znuny
@@ -215,6 +219,7 @@ commands:
 
   - name: user
     help: Manage users
+    expose: true
     commands:
       - name: admin
         help: Create the admin user

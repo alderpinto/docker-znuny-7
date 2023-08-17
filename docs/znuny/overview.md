@@ -1,9 +1,8 @@
-The entrypoint of the docker image is a unique script.  
-This script is a really command line build to manage all part of 
-the deployment and his configuration.
+The development of this container image for the **Znuny** application revolves around the use of a command-line tool.
 
-The main command is `zcli run znuny`, but it is a command which call 
-all other command requiered by the deployment process.
+This command-line tool is called `zcli` and is a **bash** script developed with the **bash** framework named **Bashly**.
 
+The script `zcli` embeds all the tools required to manage the various functionalities supported.
 
+The entry point to the docker image is this single script.  
 
