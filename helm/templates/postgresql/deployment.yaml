@@ -1,0 +1,85 @@
+{{- $rel := .Release -}}
+{{- $val := .Values -}}
+{{- if $val.postgresql.enabled }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $rel.Name }}-postgresql
+  namespace: {{ $rel.Namespace }}
+  labels:
+    app: postgresql
+    service: {{ $rel.Name }}
+{{- range $k, $v := $val.postgresql.labels }}
+    {{ $k }}: {{ $v }}
+{{- end }}
+spec:
+  replicas: {{ $val.postgresql.replicas }}
+  selector:
+    matchLabels:
+      instance: {{ $rel.Name }}-postresql
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: postgresql
+        service: {{ $rel.Name }}
+        instance: {{ $rel.Name }}-postresql
+{{- range $k, $v := $val.postgresql.labels }}
+        {{ $k }}: {{ $v }}
+{{- end }}
+    spec:
+      containers:
+        - env:
+            - name: PGDATA
+              valueFrom:
+                configMapKeyRef:
+                  key: PGDATA
+                  name: {{ $rel.Name }}-postgresql-env
+            - name: POSTGRES_DB
+              valueFrom:
+                configMapKeyRef:
+                  key: POSTGRES_DB
+                  name: {{ $rel.Name }}-postgresql-env
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  key: POSTGRES_PASSWORD
+                  name: {{ $rel.Name }}-postgresql-env
+            - name: POSTGRES_USER
+              valueFrom:
+                configMapKeyRef:
+                  key: POSTGRES_USER
+                  name: {{ $rel.Name }}-postgresql-env
+          image: {{ $val.postgresql.image.repository }}:{{ $val.postgresql.image.tag }}
+          name: {{ $rel.Name }}-postgresql
+          ports:
+            - containerPort: 5432
+{{- if $val.postgresql.resources }}
+          resources:
+            limits:
+              cpu: {{ $val.postgresql.resources.limits.cpu }}
+              memory: {{ $val.postgresql.resources.limits.memory }}
+            requests:
+              cpu: {{ $val.postgresql.resources.requests.cpu }}
+              memory: {{ $val.postgresql.resources.requests.memory }}
+{{- end }}
+{{- if $val.postgresql.persistentVolumeClaims }}
+          volumeMounts:
+{{- range $pvc := $val.postgresql.persistentVolumeClaims }}
+            - mountPath: {{ $pvc.mount }}
+              name: {{ $rel.Name }}-postgresql-{{ $pvc.name }}
+{{- end }}
+{{- end }}
+      hostname: postgresql
+      restartPolicy: {{ $val.postgresql.restartPolicy }}
+{{- if $val.postgresql.persistentVolumeClaims }}
+      volumes:
+{{- range $pvc := $val.postgresql.persistentVolumeClaims }}
+        - name: {{ $rel.Name }}-postgresql-{{ $pvc.name }}
+          persistentVolumeClaim:
+            claimName: {{ $rel.Name }}-postgresql-{{ $pvc.name }}
+{{- end }}
+{{- end }}
+{{- end }}
