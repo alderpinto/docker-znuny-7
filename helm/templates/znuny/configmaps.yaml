@@ -5,6 +5,7 @@ metadata:
   name: {{ .Release.Name }}-config
   namespace: {{ .Release.Namespace }}
   labels:
+    app: znuny
     service: {{ .Release.Name }}
 data:
   {{- if .Values.config.logs.path }}
@@ -20,10 +21,10 @@ data:
   ZNUNY_DATABASE_PASSWORD: {{ .Values.config.database.password }}
   # Settings: Web server
   ZNUNY_APACHE_DOMAIN: {{ .Values.config.apache.domain }}
+{{- if .Values.config.apache.rewriteRules }}
   ZNUNY_APACHE_REWRITE_RULES: |-
-  {{- range .Values.config.apache.rewriteRules }}
-    {{ . }}
-  {{- end }}
+{{- .Values.config.apache.rewriteRules | nindent 4 }}
+{{- end }}
   # Settings: Users
   ZNUNY_USER_ADMIN_NAME: {{ .Values.config.users.admin.name }}
   ZNUNY_USER_ADMIN_PASSWORD: {{ .Values.config.users.admin.password }}

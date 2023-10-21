@@ -5,6 +5,9 @@ kind: Ingress
 metadata:
   name: {{ .Release.Name }}-ingress
   namespace: {{ .Release.Namespace }}
+  labels:
+    app: znuny
+    service: {{ .Release.Name }}
   annotations:
   {{- range $annotation := .Values.ingress.annotations }}
     {{ $annotation }}
