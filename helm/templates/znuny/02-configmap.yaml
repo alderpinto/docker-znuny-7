@@ -1,0 +1,51 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-config
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: znuny
+    service: {{ .Release.Name }}
+data:
+  {{- if .Values.znuny.config.logs.path }}
+  # Settings: Logs
+  ZNUNY_LOGS_PATH: {{ .Values.znuny.config.logs.path }}
+  {{- end }}
+  # Settings: Database
+  ZNUNY_DATABASE_TYPE: {{ .Values.znuny.config.database.type }}
+  ZNUNY_DATABASE_HOST: {{ .Values.znuny.config.database.host }}
+  ZNUNY_DATABASE_PORT: {{ .Values.znuny.config.database.port }}
+  ZNUNY_DATABASE_NAME: {{ .Values.znuny.config.database.name }}
+  ZNUNY_DATABASE_USER: {{ .Values.znuny.config.database.user }}
+  # Settings: Web server
+  ZNUNY_APACHE_DOMAIN: {{ .Values.znuny.config.apache.domain }}
+{{- if .Values.znuny.config.apache.rewriteRules }}
+  ZNUNY_APACHE_REWRITE_RULES: |-
+{{- .Values.znuny.config.apache.rewriteRules | nindent 4 }}
+{{- end }}
+  # Settings: Users
+  ZNUNY_USER_ADMIN_NAME: {{ .Values.znuny.config.users.admin.name }}
+  # Settings: Mails
+  ZNUNY_MAILING_TYPE: {{ .Values.znuny.config.mails.type }}
+  ZNUNY_MAILING_HOST: {{ .Values.znuny.config.mails.host }}
+  ZNUNY_MAILING_PORT: {{ .Values.znuny.config.mails.port }}
+  ZNUNY_MAILING_USER: {{ .Values.znuny.config.mails.user }}
+  # Settings: Authentications
+  {{- range $index, $value := .Values.znuny.config.authentications.customers.backends }}
+  ZNUNY_CUSTOMER_BACKEND_{{ add $index 1 }}: |-
+    {{- $value | nindent 4 }}
+  {{- end }}
+  {{- range $index, $value := .Values.znuny.config.authentications.customers.synchronizations }}
+  ZNUNY_CUSTOMER_SYNCHRO_{{ add $index 1 }}: |-
+    {{- $value | nindent 4 }}
+  {{- end }}
+  {{- range $index, $value := .Values.znuny.config.authentications.agents.backends }}
+  ZNUNY_AGENTS_BACKEND_{{ add $index 1 }}: |-
+    {{- $value | nindent 4 }}
+  {{- end }}
+  {{- range $index, $value := .Values.znuny.config.authentications.agents.synchronizations }}
+  ZNUNY_AGENTS_SYNCHRO_{{ add $index 1 }}: |-
+    {{- $value | nindent 4 }}
+  {{- end }}
+
