@@ -19,3 +19,17 @@ services:
       POSTGRES_DB: znuny
       POSTGRES_USER: znuny
       POSTGRES_PASSWORD: password
+
+  bkp-pgsql:
+    image: postgres:13
+    container_name: bkp-pgsql
+    hostname: bkp-pgsql
+    ports:
+      - 5432:5432
+    # volumes:
+    #   - 'openldap_data:/bitnami/openldap'
+    environment:
+      PGDATA: /var/lib/postgresql/data/pgdata
+      POSTGRES_DB: znuny
+      POSTGRES_USER: znuny
+      POSTGRES_PASSWORD: password

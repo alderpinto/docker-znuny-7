@@ -31,3 +31,11 @@ services:
     extends:
       file: compose/postgresql.yaml
       service: postgresql
+
+  bkp-pgsql:
+    # networks:
+    #   net:
+    #     ipv4_address: 172.30.0.13
+    extends:
+      file: compose/postgresql.yaml
+      service: bkp-pgsql

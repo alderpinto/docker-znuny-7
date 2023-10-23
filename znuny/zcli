@@ -1359,6 +1359,7 @@ function database_init_pgsql() {
   PASSWORD=${5}
 
   export PGPASSWORD=${PASSWORD}
+
   psql -q -h ${HOST} -p${PORT} -U ${USER} -d ${NAME} -f /opt/otrs/scripts/database/schema.postgresql.sql
   sleep 1
   psql -q -h ${HOST} -p${PORT} -U ${USER} -d ${NAME} -f /opt/otrs/scripts/database/initial_insert.postgresql.sql
@@ -1391,6 +1392,81 @@ function database_wait_pgsql() {
   else
     return 1 # Database not initialize
   fi
+}
+
+function database_role_pgsql() {
+  HOST=${1}
+  PORT=${2}
+  NAME=${3}
+  USER=${4}
+  PASSWORD=${5}
+
+  ROLE_LIST=(
+    "postgresql"
+    "otrs"
+    "znuny"
+    "otrsreader"
+    "znunyreader"
+  )
+
+  ROLE_FILE="/tmp/role.sql"
+
+  export PGPASSWORD=${PASSWORD}
+
+  for ROLE in ${!ROLE_LIST[*]}; do
+    CONTENT=$(cat << EOF | tee -a ${ROLE_FILE}
+DO
+\$do$
+BEGIN
+    IF NOT EXISTS (
+        SELECT FROM pg_catalog.pg_roles
+
+        WHERE rolname = '${ROLE_LIST[$ROLE]}') THEN
+        CREATE ROLE ${ROLE_LIST[$ROLE]};
+    END IF;
+END
+\$do$;
+EOF
+)
+      # -- CREATE ROLE ${ROLE_LIST[$ROLE]} LOGIN PASSWORD '${PASSWORD}'
+    psql -q -h ${HOST} -p${PORT} -U ${USER} -d ${NAME} -f ${ROLE_FILE} 2>&1>/dev/null
+    rm -f ${ROLE_FILE}
+    sleep 1
+  done
+}
+
+function database_deletion_pgsql() {
+  HOST=${1}
+  PORT=${2}
+  NAME=${3}
+  USER=${4}
+  PASSWORD=${5}
+
+  export PGPASSWORD=${PASSWORD}
+
+  REQ_FILE="/tmp/delete_tables.sql"
+
+  CONTENT=$(cat << EOF | tee -a ${REQ_FILE}
+DO \$$
+
+DECLARE
+
+    table_name text;
+BEGIN
+    FOR table_name IN (SELECT tablename FROM pg_tables WHERE schemaname = 'public')
+
+    LOOP
+        EXECUTE 'DELETE FROM ' || table_name;
+    END LOOP;
+END \$$;
+EOF
+)
+
+  psql -q -h ${HOST} -p${PORT} -U ${USER} -d ${NAME} -f ${REQ_FILE}
+  # 2>&1>/dev/null
+
+  rm -f ${REQ_FILE}
+  sleep 1
 }
 
 # src/lib/env.sh
@@ -1941,6 +2017,7 @@ zcli_config_database_command() {
         customLogger "warn" "config_database" "SKIP: The database is not empty"
       else
         customLogger "info" "config_database" "Initialize the database schemas"
+        database_role_pgsql "${ZNUNY_DATABASE_HOST}" "${ZNUNY_DATABASE_PORT}" "${ZNUNY_DATABASE_NAME}" "${ZNUNY_DATABASE_USER}" "${ZNUNY_DATABASE_PASSWORD}"
         database_init_pgsql "${ZNUNY_DATABASE_HOST}" "${ZNUNY_DATABASE_PORT}" "${ZNUNY_DATABASE_NAME}" "${ZNUNY_DATABASE_USER}" "${ZNUNY_DATABASE_PASSWORD}"
       fi
     ;;
@@ -2169,16 +2246,37 @@ zcli_init_command() {
 # :command.function
 zcli_migration_database_command() {
   # src/migration_database_command.sh
+  DUMP_FILE="/tmp/znuny-db-dump.sql"
+
+  su -c "/opt/otrs/bin/otrs.Daemon.pl stop" -s /bin/sh otrs
+  su -c "/opt/otrs/bin/Cron.sh stop" -s /bin/sh otrs
 
   if [[ "${args[type]}" == "mysql" ]]; then
-      echo "mysqldump -u ${args[-u]} -h ${args[-h]} -P ${args[-p]} -p ${args[-w]} ${args[-n]} > /tmp/znuny-db-dump.sql"
+      echo "mysqldump -u ${args[-u]} -h ${args[-h]} -P ${args[-p]} -p ${args[-w]} ${args[-n]} > ${DUMP_FILE}"
       sleep 3
-      echo "mysql -u ${ZNUNY_DATABASE_USER} -h ${ZNUNY_DATABASE_HOST} -P ${ZNUNY_DATABASE_PORT} -p ${ZNUNY_DATABASE_PASSWORD} ${ZNUNY_DATABASE_NAME} < /tmp/znuny-db-dump.sql"
+      echo "mysql -u ${ZNUNY_DATABASE_USER} -h ${ZNUNY_DATABASE_HOST} -P ${ZNUNY_DATABASE_PORT} -p ${ZNUNY_DATABASE_PASSWORD} ${ZNUNY_DATABASE_NAME} < ${DUMP_FILE}"
   elif [[ "${args[type]}" == "pgsql" ]]; then
-      echo "PGPASSWORD=${args[-w]} pg_dump -U ${args[-u]} -h ${args[-h]} -p ${args[-p]} -d ${args[-n]} -f /tmp/znuny-db-dump.sql"
-      sleep 3
-      echo "PGPASSWORD=${ZNUNY_DATABASE_PASSWORD} pg_restore -U ${ZNUNY_DATABASE_USER} -h ${ZNUNY_DATABASE_HOST} -p ${ZNUNY_DATABASE_PORT} -d ${ZNUNY_DATABASE_NAME} /tmp/znuny-db-dump.sql"
+      # echo "PGPASSWORD=${args[-w]} pg_dump -U ${args[-u]} -h ${args[-h]} -p ${args[-p]} -d ${args[-n]} -f ${DUMP_FILE}"
+      export PGPASSWORD=${args[-w]}
+      pg_dump -U ${args[-u]} -h ${args[-h]} -p ${args[-p]} -d ${args[-n]} -f ${DUMP_FILE}
+
+      sleep 1
+
+      database_deletion_pgsql "${ZNUNY_DATABASE_HOST}" "${ZNUNY_DATABASE_PORT}" "${ZNUNY_DATABASE_NAME}" "${ZNUNY_DATABASE_USER}" "${ZNUNY_DATABASE_PASSWORD}"
+
+      sleep 1
+
+      database_role_pgsql "${ZNUNY_DATABASE_HOST}" "${ZNUNY_DATABASE_PORT}" "${ZNUNY_DATABASE_NAME}" "${ZNUNY_DATABASE_USER}" "${ZNUNY_DATABASE_PASSWORD}"
+
+      sleep 1
+
+      export PGPASSWORD=${ZNUNY_DATABASE_PASSWORD}
+
+      # echo "PGPASSWORD=${ZNUNY_DATABASE_PASSWORD} pg_restore -U ${ZNUNY_DATABASE_USER} -h ${ZNUNY_DATABASE_HOST} -p ${ZNUNY_DATABASE_PORT} -d ${ZNUNY_DATABASE_NAME} ${DUMP_FILE}"
+      psql -U ${ZNUNY_DATABASE_USER} -h ${ZNUNY_DATABASE_HOST} -p ${ZNUNY_DATABASE_PORT} -d ${ZNUNY_DATABASE_NAME} < ${DUMP_FILE}
   fi
+
+  rm -f ${DUMP_FILE}
 
 }
 
@@ -2200,7 +2298,32 @@ zcli_migration_s3_command() {
 # :command.function
 zcli_migration_local_command() {
   # src/migration_local_command.sh
-  echo "${args[path]}"
+  DUMP_FILE="${args[path]}"
+
+  su -c "/opt/otrs/bin/otrs.Daemon.pl stop" -s /bin/sh otrs
+  su -c "/opt/otrs/bin/Cron.sh stop" -s /bin/sh otrs
+
+  if [[ "${ZNUNY_DATABASE_TYPE}" == "mysql" ]]; then
+      echo "mysqldump -u ${args[-u]} -h ${args[-h]} -P ${args[-p]} -p ${args[-w]} ${args[-n]} > ${DUMP_FILE}"
+      sleep 3
+      echo "mysql -u ${ZNUNY_DATABASE_USER} -h ${ZNUNY_DATABASE_HOST} -P ${ZNUNY_DATABASE_PORT} -p ${ZNUNY_DATABASE_PASSWORD} ${ZNUNY_DATABASE_NAME} < ${DUMP_FILE}"
+  elif [[ "${ZNUNY_DATABASE_TYPE}" == "pgsql" ]]; then
+      database_deletion_pgsql "${ZNUNY_DATABASE_HOST}" "${ZNUNY_DATABASE_PORT}" "${ZNUNY_DATABASE_NAME}" "${ZNUNY_DATABASE_USER}" "${ZNUNY_DATABASE_PASSWORD}"
+
+      sleep 1
+
+      database_role_pgsql "${ZNUNY_DATABASE_HOST}" "${ZNUNY_DATABASE_PORT}" "${ZNUNY_DATABASE_NAME}" "${ZNUNY_DATABASE_USER}" "${ZNUNY_DATABASE_PASSWORD}"
+
+      sleep 1
+
+      export PGPASSWORD=${ZNUNY_DATABASE_PASSWORD}
+
+      # echo "PGPASSWORD=${ZNUNY_DATABASE_PASSWORD} pg_restore -U ${ZNUNY_DATABASE_USER} -h ${ZNUNY_DATABASE_HOST} -p ${ZNUNY_DATABASE_PORT} -d ${ZNUNY_DATABASE_NAME} ${DUMP_FILE}"
+      psql -U ${ZNUNY_DATABASE_USER} -h ${ZNUNY_DATABASE_HOST} -p ${ZNUNY_DATABASE_PORT} -d ${ZNUNY_DATABASE_NAME} < ${DUMP_FILE}
+  fi
+
+  rm -f ${DUMP_FILE}
+
 }
 
 # :command.function

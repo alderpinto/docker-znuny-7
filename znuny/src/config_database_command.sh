@@ -20,6 +20,7 @@ case ${ZNUNY_DATABASE_TYPE} in
       customLogger "warn" "config_database" "SKIP: The database is not empty"
     else
       customLogger "info" "config_database" "Initialize the database schemas"
+      database_role_pgsql "${ZNUNY_DATABASE_HOST}" "${ZNUNY_DATABASE_PORT}" "${ZNUNY_DATABASE_NAME}" "${ZNUNY_DATABASE_USER}" "${ZNUNY_DATABASE_PASSWORD}"
       database_init_pgsql "${ZNUNY_DATABASE_HOST}" "${ZNUNY_DATABASE_PORT}" "${ZNUNY_DATABASE_NAME}" "${ZNUNY_DATABASE_USER}" "${ZNUNY_DATABASE_PASSWORD}"
     fi
   ;;
