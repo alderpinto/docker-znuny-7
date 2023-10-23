@@ -3,7 +3,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ $rel.Name }}
+  name: {{ $rel.Name }}-znuny
   namespace: {{ $rel.Namespace }}
   labels:
     app: znuny
@@ -18,7 +18,7 @@ spec:
   replicas: {{ .Values.znuny.replicaCount }}
   selector:
     matchLabels:
-      instance: {{ $rel.Name }}-postresql
+      instance: {{ $rel.Name }}-znuny
   strategy:
     type: {{ .Values.znuny.deploymentStrategy }}
   template:
@@ -31,6 +31,7 @@ spec:
       containers:
         - name: {{ $rel.Name }}
           image: {{ .Values.znuny.image.repository }}:{{ .Values.znuny.image.tag }}
+          imagePullPolicy: {{ .Values.postgresql.image.pullPolicy }}
           ports:
             - containerPort: {{ .Values.znuny.service.port }}
           {{- if .Values.znuny.resources }}
@@ -49,28 +50,29 @@ spec:
               name: {{ $rel.Name }}-{{ $pvc.name }}
             {{- end }}
           {{- end }}
-          env:
-            - name: ZNUNY_MAILING_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ $rel.Name }}-znuny-secrets
-                  key: znuny_mails_password
-            - name: ZNUNY_DATABASE_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ $rel.Name }}-znuny-secrets
-                  key: znuny_database_password
-            - name: ZNUNY_USER_ADMIN_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ $rel.Name }}-znuny-secrets
-                  key: znuny_user_admin_password
           envFrom:
-            - configMapRef:
-              name: {{ $rel.Name }}-config
+          - configMapRef:
+              name: {{ $rel.Name }}-znuny-config
+          - secretRef:
+              name: {{ $rel.Name }}-znuny-secrets
+          # env:
+          # - name: ZNUNY_MAILING_PASSWORD
+          #   valueFrom:
+          #     secretKeyRef:
+          #       name: {{ $rel.Name }}-znuny-secrets
+          #       key: znuny_mails_password
+          # - name: ZNUNY_DATABASE_PASSWORD
+          #   valueFrom:
+          #     secretKeyRef:
+          #       name: {{ $rel.Name }}-znuny-secrets
+          #       key: znuny_database_password
+          # - name: ZNUNY_USER_ADMIN_PASSWORD
+          #   valueFrom:
+          #     secretKeyRef:
+          #       name: {{ $rel.Name }}-znuny-secrets
+          #       key: znuny_user_admin_password
       hostname: {{ $rel.Name }}
       restartPolicy: {{ .Values.znuny.restartPolicy }}
-      imagePullPolicy: {{ .Values.postgresql.image.pullPolicy }}
       {{- if .Values.znuny.image.pullSecrets }}
       imagePullSecrets:
         {{- range $ps := .Values.znuny.image.pullSecrets }}

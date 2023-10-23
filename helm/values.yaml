@@ -23,13 +23,12 @@ znuny:
   replicaCount: 1
 
   image:
-    repository: ghcr.io/mln-nicolas-b/docker-znuny
-    tag: v6.5.4-0
+    repository: ghcr.io/fr-bez-aosc/docker-znuny
+    tag: v6.5.4-1
     pullPolicy: IfNotPresent
-    pullSecrets: {}
-    # pullSecrets:
-    #   - name: gh
-    #     secret: 
+    pullSecrets: []
+      # - name: gh
+      #   secret: 
 
   config:
     logs:
@@ -37,14 +36,14 @@ znuny:
     
     database:
       type: pgsql
-      host: postgresql.default.svc.cluster.local
+      # host: 
       port: 5432
       name: znuny
       user: znuny
       password: password
 
     apache:
-      domain: znuny.domain.tld
+      # domain: 
       rewriteRules: |-
         RewriteRule ^/$ https://%{HTTP_HOST}/otrs/customer.pl
         RewriteRule ^/otrs/$ https://%{HTTP_HOST}/otrs/customer.pl
@@ -56,7 +55,7 @@ znuny:
         password: password
 
     mails:
-      type: external
+      type: internal
       host: smtp.domain.tld
       port: 25
       user: znuny@domain.tld
@@ -153,10 +152,10 @@ postgresql:
 
 
   image:
-    repository: postgresql
+    repository: postgres
     tag: 13
     pullPolicy: IfNotPresent
-    pullSecrets: {}
+    pullSecrets: []
     # pullSecrets:
     #   - name: gh
     #     secret: 
@@ -174,21 +173,25 @@ postgresql:
   restartPolicy: Always
   deploymentStrategy: Recreate
 
+  imagePullSecrets: []
+  # imagePullSecrets:
+  #   - github-registry-secret
+
   persistentVolumeClaims:
     - name: "data"
       size: "10Gi"
       accessModes: 
         - ReadWriteOnce
-      mount: "/var/lib/postgresql/data/pgdata"
+      mount: "/var/lib/postgresql/data"
 
-  resources: {}
-  # resources:
-  #   limits:
-  #     cpu: 100m
-  #     memory: 128Mi
-  #   requests:
-  #     cpu: 100m
-  #     memory: 128Mi
+  # resources: {}
+  resources:
+    limits:
+      cpu: 100m
+      memory: 128Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
 
   service:
     type: ClusterIP
@@ -204,7 +207,7 @@ mariadb:
   root_password: password
 
 ##TODO
-podSecurityContext: {} # fsGroup: 2000
+podSecurityContext: {}
 
 ##TODO
 securityContext:
@@ -224,3 +227,4 @@ tolerations: []
 
 ##TODO
 affinity: {}
+

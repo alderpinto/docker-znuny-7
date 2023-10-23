@@ -59,6 +59,7 @@ spec:
                   key: POSTGRES_USER
                   name: {{ $rel.Name }}-postgresql-env
           image: {{ $val.postgresql.image.repository }}:{{ $val.postgresql.image.tag }}
+          imagePullPolicy: {{ $val.postgresql.image.pullPolicy }}
           name: {{ $rel.Name }}-postgresql
           ports:
             - containerPort: 5432
@@ -80,7 +81,6 @@ spec:
 {{- end }}
       hostname: postgresql
       restartPolicy: {{ $val.postgresql.restartPolicy }}
-      imagePullPolicy: {{ $val.postgresql.image.pullPolicy }}
       {{- if $val.postgresql.image.pullSecrets }}
       imagePullSecrets:
         {{- range $ps := $val.postgresql.image.pullSecrets }}
