@@ -30,11 +30,8 @@ nav:
     - Overview: helm/overview
     - Deployment: helm/deployment
     - Development: helm/development
-  - Roadmaps:
-    - v6.5.3-2: roadmaps/v6.5.3-2
-    - v6.5.3-3: roadmaps/v6.5.3-3
-    - v6.5.3-4: roadmaps/v6.5.3-4
-    - v6.5.3-5: roadmaps/v6.5.3-5
+  - Kubernetes:
+    - Migration: kubernetes/migration.md
 
 markdown_extensions:
   - abbr

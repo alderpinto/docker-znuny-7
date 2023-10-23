@@ -1,17 +1,4 @@
-## Databases migrations
-
-- [ ] - Get the dump file from an object storage
-- [ ] - Get the dump file from an other database
-- [ ] - Get the dump file from the local filesystem
-- [ ] - Check the dump file integrity
-- [ ] - Check the dump file to ensure the aren't issues about the databases
-- [ ] - Inject the dump file into the application database
-    - [ ] - Test to MariaDB
-    - [ ] - Test to PostgreSQL
-- [ ] - Use Kubernetes job to perform the migration :
-    - [ ] - From an object storage
-    - [ ] - From a database
-    - [ ] - From the local filesystem
+coming soon
 
 ```yaml
 apiVersion: batch/v1
