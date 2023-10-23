@@ -6,29 +6,30 @@ services:
     build:
       context: ..
       dockerfile: ./znuny/Dockerfile
-    image: znuny:v6.5.3
+    image: ghcr.io/fr-bez-aosc/docker-znuny:v6.5.4-1
     container_name: znuny
     hostname: znuny
     ports:
       - 8080:80
     depends_on:
       - mariadb
+      - postgresql
     environment:
       # Settings: Database
       ### MySQL
-      ZNUNY_DATABASE_TYPE: mysql
-      ZNUNY_DATABASE_HOST: mariadb
-      ZNUNY_DATABASE_PORT: 3306
-      ZNUNY_DATABASE_NAME: znuny
-      ZNUNY_DATABASE_USER: znuny
-      ZNUNY_DATABASE_PASSWORD: password
-      ### PgSQL
-      # ZNUNY_DATABASE_TYPE: pgsql
-      # ZNUNY_DATABASE_HOST: postgresql
-      # ZNUNY_DATABASE_PORT: 5432
+      # ZNUNY_DATABASE_TYPE: mysql
+      # ZNUNY_DATABASE_HOST: mariadb
+      # ZNUNY_DATABASE_PORT: 3306
       # ZNUNY_DATABASE_NAME: znuny
       # ZNUNY_DATABASE_USER: znuny
       # ZNUNY_DATABASE_PASSWORD: password
+      ### PgSQL
+      ZNUNY_DATABASE_TYPE: pgsql
+      ZNUNY_DATABASE_HOST: postgresql
+      ZNUNY_DATABASE_PORT: 5432
+      ZNUNY_DATABASE_NAME: znuny
+      ZNUNY_DATABASE_USER: znuny
+      ZNUNY_DATABASE_PASSWORD: password
       # Settings: Logs
       # ZNUNY_LOG_PATH: /var/log/znuny
       # Settings: Web server

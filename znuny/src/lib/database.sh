@@ -63,3 +63,32 @@ function database_init_pgsql() {
   sleep 1
   psql -q -h ${HOST} -p${PORT} -U ${USER} -d ${NAME} -f /opt/otrs/scripts/database/schema-post.postgresql.sql
 }
+
+
+function database_wait_pgsql() {
+  HOST=${1}
+  PORT=${2}
+  NAME=${3}
+  USER=${4}
+  PASSWORD=${5}
+
+  export PGPASSWORD=${PASSWORD}
+
+  for i in {1..60}; do
+    pg_isready -q -h ${HOST} -p ${PORT} -U ${USER} -d ${NAME}
+
+    if [[ ${?} -eq 0 ]]; then
+      CHECK="true"
+      break
+    else
+      sleep 1
+    fi
+  done
+
+
+  if [[ ${CHECK} == "true" ]]; then
+    return 0 # Database already initialize
+  else
+    return 1 # Database not initialize
+  fi
+}

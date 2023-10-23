@@ -18,7 +18,7 @@ zcli check config
 
 zcli user admin
 
-# zcli dev
+# # zcli dev
 
 zcli run znuny
 
