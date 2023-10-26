@@ -1,7 +1,7 @@
 DUMP_FILE="${args[path]}"
 
-su -c "/opt/otrs/bin/otrs.Daemon.pl stop" -s /bin/sh otrs
-su -c "/opt/otrs/bin/Cron.sh stop" -s /bin/sh otrs
+su -c "/opt/otrs/bin/otrs.Daemon.pl stop" -s /bin/sh otrs || true
+su -c "/opt/otrs/bin/Cron.sh stop" -s /bin/sh otrs || true
 
 if [[ "${ZNUNY_DATABASE_TYPE}" == "mysql" ]]; then
     echo "mysqldump -u ${args[-u]} -h ${args[-h]} -P ${args[-p]} -p ${args[-w]} ${args[-n]} > ${DUMP_FILE}"
@@ -19,7 +19,11 @@ elif [[ "${ZNUNY_DATABASE_TYPE}" == "pgsql" ]]; then
     export PGPASSWORD=${ZNUNY_DATABASE_PASSWORD}
 
     # echo "PGPASSWORD=${ZNUNY_DATABASE_PASSWORD} pg_restore -U ${ZNUNY_DATABASE_USER} -h ${ZNUNY_DATABASE_HOST} -p ${ZNUNY_DATABASE_PORT} -d ${ZNUNY_DATABASE_NAME} ${DUMP_FILE}"
-    psql -U ${ZNUNY_DATABASE_USER} -h ${ZNUNY_DATABASE_HOST} -p ${ZNUNY_DATABASE_PORT} -d ${ZNUNY_DATABASE_NAME} < ${DUMP_FILE}
+    if [[ ${args[-f]} == "true" ]]; then
+        psql -v ON_ERROR_STOP=off -U ${ZNUNY_DATABASE_USER} -h ${ZNUNY_DATABASE_HOST} -p ${ZNUNY_DATABASE_PORT} -d ${ZNUNY_DATABASE_NAME} < ${DUMP_FILE}
+    else
+        psql -U ${ZNUNY_DATABASE_USER} -h ${ZNUNY_DATABASE_HOST} -p ${ZNUNY_DATABASE_PORT} -d ${ZNUNY_DATABASE_NAME} < ${DUMP_FILE}
+    fi
 fi
 
 rm -f ${DUMP_FILE}

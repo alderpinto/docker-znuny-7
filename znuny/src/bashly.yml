@@ -205,6 +205,10 @@ commands:
           - name: path
             required: true
             help: Path of the dump file
+        flags:
+          - short: -f
+            arg: force
+            required: false
 
   - name: run
     help: Run Znuny

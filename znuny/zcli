@@ -862,13 +862,19 @@ zcli_migration_local_usage() {
   fi
 
   printf "%s\n" "Usage:"
-  printf "  zcli migration local PATH\n"
+  printf "  zcli migration local PATH [OPTIONS]\n"
   printf "  zcli migration local --help | -h\n"
   echo
 
   # :command.long_usage
   if [[ -n $long_usage ]]; then
     printf "%s\n" "Options:"
+
+    # :command.usage_flags
+    # :flag.usage
+    printf "  %s\n" "-f FORCE"
+    printf "\n"
+    echo
 
     # :command.usage_fixed_flags
     printf "  %s\n" "--help, -h"
@@ -2238,8 +2244,8 @@ zcli_migration_database_command() {
   # src/migration_database_command.sh
   DUMP_FILE="/tmp/znuny-db-dump.sql"
 
-  su -c "/opt/otrs/bin/otrs.Daemon.pl stop" -s /bin/sh otrs
-  su -c "/opt/otrs/bin/Cron.sh stop" -s /bin/sh otrs
+  su -c "/opt/otrs/bin/otrs.Daemon.pl stop" -s /bin/sh otrs || true
+  su -c "/opt/otrs/bin/Cron.sh stop" -s /bin/sh otrs || true
 
   if [[ "${args[type]}" == "mysql" ]]; then
       echo "mysqldump -u ${args[-u]} -h ${args[-h]} -P ${args[-p]} -p ${args[-w]} ${args[-n]} > ${DUMP_FILE}"
@@ -2290,8 +2296,8 @@ zcli_migration_local_command() {
   # src/migration_local_command.sh
   DUMP_FILE="${args[path]}"
 
-  su -c "/opt/otrs/bin/otrs.Daemon.pl stop" -s /bin/sh otrs
-  su -c "/opt/otrs/bin/Cron.sh stop" -s /bin/sh otrs
+  su -c "/opt/otrs/bin/otrs.Daemon.pl stop" -s /bin/sh otrs || true
+  su -c "/opt/otrs/bin/Cron.sh stop" -s /bin/sh otrs || true
 
   if [[ "${ZNUNY_DATABASE_TYPE}" == "mysql" ]]; then
       echo "mysqldump -u ${args[-u]} -h ${args[-h]} -P ${args[-p]} -p ${args[-w]} ${args[-n]} > ${DUMP_FILE}"
@@ -2309,7 +2315,11 @@ zcli_migration_local_command() {
       export PGPASSWORD=${ZNUNY_DATABASE_PASSWORD}
 
       # echo "PGPASSWORD=${ZNUNY_DATABASE_PASSWORD} pg_restore -U ${ZNUNY_DATABASE_USER} -h ${ZNUNY_DATABASE_HOST} -p ${ZNUNY_DATABASE_PORT} -d ${ZNUNY_DATABASE_NAME} ${DUMP_FILE}"
-      psql -U ${ZNUNY_DATABASE_USER} -h ${ZNUNY_DATABASE_HOST} -p ${ZNUNY_DATABASE_PORT} -d ${ZNUNY_DATABASE_NAME} < ${DUMP_FILE}
+      if [[ ${args[-f]} == "true" ]]; then
+          psql -v ON_ERROR_STOP=off -U ${ZNUNY_DATABASE_USER} -h ${ZNUNY_DATABASE_HOST} -p ${ZNUNY_DATABASE_PORT} -d ${ZNUNY_DATABASE_NAME} < ${DUMP_FILE}
+      else
+          psql -U ${ZNUNY_DATABASE_USER} -h ${ZNUNY_DATABASE_HOST} -p ${ZNUNY_DATABASE_PORT} -d ${ZNUNY_DATABASE_NAME} < ${DUMP_FILE}
+      fi
   fi
 
   rm -f ${DUMP_FILE}
@@ -3537,6 +3547,20 @@ zcli_migration_local_parse_requirements() {
   while [[ $# -gt 0 ]]; do
     key="$1"
     case "$key" in
+      # :flag.case
+      -f)
+
+        # :flag.case_arg
+        if [[ -n ${2+x} ]]; then
+
+          args['-f']="$2"
+          shift
+          shift
+        else
+          printf "%s\n" "-f requires an argument: -f FORCE" >&2
+          exit 1
+        fi
+        ;;
 
       -?*)
         printf "invalid option: %s\n" "$key" >&2
@@ -3562,7 +3586,7 @@ zcli_migration_local_parse_requirements() {
 
   # :command.required_args_filter
   if [[ -z ${args['path']+x} ]]; then
-    printf "missing required argument: PATH\nusage: zcli migration local PATH\n" >&2
+    printf "missing required argument: PATH\nusage: zcli migration local PATH [OPTIONS]\n" >&2
     exit 1
   fi
 

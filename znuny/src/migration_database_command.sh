@@ -1,7 +1,7 @@
 DUMP_FILE="/tmp/znuny-db-dump.sql"
 
-su -c "/opt/otrs/bin/otrs.Daemon.pl stop" -s /bin/sh otrs
-su -c "/opt/otrs/bin/Cron.sh stop" -s /bin/sh otrs
+su -c "/opt/otrs/bin/otrs.Daemon.pl stop" -s /bin/sh otrs || true
+su -c "/opt/otrs/bin/Cron.sh stop" -s /bin/sh otrs || true
 
 if [[ "${args[type]}" == "mysql" ]]; then
     echo "mysqldump -u ${args[-u]} -h ${args[-h]} -P ${args[-p]} -p ${args[-w]} ${args[-n]} > ${DUMP_FILE}"
