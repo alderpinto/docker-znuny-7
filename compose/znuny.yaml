@@ -6,7 +6,7 @@ services:
     build:
       context: ..
       dockerfile: ./znuny/Dockerfile
-    image: ghcr.io/fr-bez-aosc/docker-znuny:v6.5.4-1
+    image: ghcr.io/fr-bez-aosc/docker-znuny:v6.5.4-2
     container_name: znuny
     hostname: znuny
     ports:

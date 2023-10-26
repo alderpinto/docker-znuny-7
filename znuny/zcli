@@ -1444,28 +1444,18 @@ function database_deletion_pgsql() {
 
   export PGPASSWORD=${PASSWORD}
 
-  REQ_FILE="/tmp/delete_tables.sql"
+  psql -U ${USER} -h ${HOST} -p ${PORT} -d postgres \
+    -c "UPDATE pg_database SET datallowconn = 'false' WHERE datname = '${NAME}';"
 
-  CONTENT=$(cat << EOF | tee -a ${REQ_FILE}
-DO \$$
+  psql -U ${USER} -h ${HOST} -p ${PORT} -d postgres \
+    -c "SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = '${NAME}';"
 
-DECLARE
+  psql -U ${USER} -h ${HOST} -p ${PORT} -d postgres \
+    -c "DROP DATABASE IF EXISTS ${NAME};"
 
-    table_name text;
-BEGIN
-    FOR table_name IN (SELECT tablename FROM pg_tables WHERE schemaname = 'public')
+  psql -U ${USER} -h ${HOST} -p ${PORT} -d postgres \
+    -c "CREATE DATABASE ${NAME};"
 
-    LOOP
-        EXECUTE 'DELETE FROM ' || table_name;
-    END LOOP;
-END \$$;
-EOF
-)
-
-  psql -q -h ${HOST} -p${PORT} -U ${USER} -d ${NAME} -f ${REQ_FILE}
-  # 2>&1>/dev/null
-
-  rm -f ${REQ_FILE}
   sleep 1
 }
 
