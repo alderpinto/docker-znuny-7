@@ -42,6 +42,8 @@ spec:
             requests:
               cpu: {{ .Values.znuny.resources.requests.cpu }}
               memory: {{ .Values.znuny.resources.requests.memory }}
+          {{- else }}
+          resources: {}
           {{- end }}
           {{- if .Values.znuny.persistenVolumeClaims }}
           volumeMounts:

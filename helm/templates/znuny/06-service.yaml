@@ -13,6 +13,6 @@ spec:
       port: {{ .Values.znuny.service.port }}
       targetPort: {{ .Values.znuny.service.port }}
   selector:
-    service: {{ .Release.Name }}
+    instance: {{ .Release.Name }}-znuny
 status:
   loadBalancer: {}

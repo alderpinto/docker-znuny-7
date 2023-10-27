@@ -71,6 +71,8 @@ spec:
             requests:
               cpu: {{ $val.postgresql.resources.requests.cpu }}
               memory: {{ $val.postgresql.resources.requests.memory }}
+{{- else }}
+          resources: {}
 {{- end }}
 {{- if $val.postgresql.persistentVolumeClaims }}
           volumeMounts:

@@ -13,7 +13,7 @@ metadata:
     {{ $annotation }}
   {{- end }}
   {{- if .Values.znuny.ingress.tls.enabled }}
-    {{- range $annotation := .Values.znuny.ingress.tls.annotations }}
+    {{- range $annotation := .Values.znuny.ingress.annotations }}
     {{ $annotation }}
     {{- end }}
   {{- end }}
@@ -24,7 +24,7 @@ spec:
         paths:
           - backend:
               service:
-                name: {{ .Release.Name }}
+                name: {{ .Release.Name }}-znuny
                 port:
                   number: {{ .Values.znuny.service.port }}
             path: /
