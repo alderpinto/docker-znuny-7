@@ -54,6 +54,7 @@ zcli_usage() {
   [[ -n $long_usage ]] && printf "  %s   Run the crons of Znuny\n" "run cron          "
   [[ -n $long_usage ]] && printf "  %s   Run the daemon of Znuny\n" "run daemon        "
   [[ -n $long_usage ]] && printf "  %s   Run Znuny\n" "run znuny         "
+  printf "  %s   Manage Upgrades operations\n" "upgrade           "
   printf "  %s   Manage users\n" "user              "
   [[ -n $long_usage ]] && printf "  %s   Create the admin user\n" "user admin        "
   [[ -n $long_usage ]] && printf "  %s   Set the user permissions\n" "user permissions  "
@@ -1000,6 +1001,35 @@ zcli_run_znuny_usage() {
   printf "%s\n" "Usage:"
   printf "  zcli run znuny\n"
   printf "  zcli run znuny --help | -h\n"
+  echo
+
+  # :command.long_usage
+  if [[ -n $long_usage ]]; then
+    printf "%s\n" "Options:"
+
+    # :command.usage_fixed_flags
+    printf "  %s\n" "--help, -h"
+    printf "    Show this help\n"
+    echo
+
+  fi
+}
+
+# :command.usage
+zcli_upgrade_usage() {
+  if [[ -n $long_usage ]]; then
+    printf "zcli upgrade - Manage Upgrades operations\n"
+    echo
+
+  else
+    printf "zcli upgrade - Manage Upgrades operations\n"
+    echo
+
+  fi
+
+  printf "%s\n" "Usage:"
+  printf "  zcli upgrade\n"
+  printf "  zcli upgrade --help | -h\n"
   echo
 
   # :command.long_usage
@@ -2369,6 +2399,29 @@ zcli_run_znuny_command() {
 }
 
 # :command.function
+zcli_upgrade_command() {
+  # src/upgrade_command.sh
+  zcli download
+
+  zcli user system
+
+  zcli config znuny
+
+  zcli config apache
+
+  zcli config crons
+
+  zcli user permissions
+
+  zcli check modules
+
+  zcli check config
+
+  su -c "/opt/otrs/scripts/MigrateToZnuny6_5.pl" -s /bin/sh otrs
+
+}
+
+# :command.function
 zcli_user_admin_command() {
   # src/user_admin_command.sh
   customLogger "info" "user_admin" "Create the application admin user: '${ZNUNY_USER_ADMIN_NAME}'"
@@ -2481,6 +2534,13 @@ parse_requirements() {
       action="run"
       shift
       zcli_run_parse_requirements "$@"
+      shift $#
+      ;;
+
+    upgrade)
+      action="upgrade"
+      shift
+      zcli_upgrade_parse_requirements "$@"
       shift $#
       ;;
 
@@ -3806,6 +3866,50 @@ zcli_run_znuny_parse_requirements() {
 }
 
 # :command.parse_requirements
+zcli_upgrade_parse_requirements() {
+  # :command.fixed_flags_filter
+  while [[ $# -gt 0 ]]; do
+    case "${1:-}" in
+      --help | -h)
+        long_usage=yes
+        zcli_upgrade_usage
+        exit
+        ;;
+
+      *)
+        break
+        ;;
+
+    esac
+  done
+
+  # :command.command_filter
+  action="upgrade"
+
+  # :command.parse_requirements_while
+  while [[ $# -gt 0 ]]; do
+    key="$1"
+    case "$key" in
+
+      -?*)
+        printf "invalid option: %s\n" "$key" >&2
+        exit 1
+        ;;
+
+      *)
+        # :command.parse_requirements_case
+        # :command.parse_requirements_case_simple
+        printf "invalid argument: %s\n" "$key" >&2
+        exit 1
+
+        ;;
+
+    esac
+  done
+
+}
+
+# :command.parse_requirements
 zcli_user_parse_requirements() {
   # :command.fixed_flags_filter
   while [[ $# -gt 0 ]]; do
@@ -4062,6 +4166,7 @@ run() {
     "run cron") zcli_run_cron_command ;;
     "run daemon") zcli_run_daemon_command ;;
     "run znuny") zcli_run_znuny_command ;;
+    "upgrade") zcli_upgrade_command ;;
     "user") zcli_user_command ;;
     "user admin") zcli_user_admin_command ;;
     "user permissions") zcli_user_permissions_command ;;

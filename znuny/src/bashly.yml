@@ -221,6 +221,9 @@ commands:
       - name: znuny
         help: Run Znuny
 
+  - name: upgrade
+    help: Manage Upgrades operations
+
   - name: user
     help: Manage users
     expose: true
