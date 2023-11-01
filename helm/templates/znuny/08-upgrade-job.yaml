@@ -17,10 +17,7 @@ spec:
                 name: {{ $rel.Name }}-znuny-config
             - secretRef:
                 name: {{ $rel.Name }}-znuny-secrets
-          command: [
-            "zcli",
-						"upgrade"
-          ]
+          command: ["zcli", "upgrade"]
       restartPolicy: Never
       {{- if .Values.znuny.image.pullSecrets }}
       imagePullSecrets:
