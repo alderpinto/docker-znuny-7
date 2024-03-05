@@ -1,4 +1,19 @@
-FROM debian:stable-20230612-slim
+FROM ruby:alpine AS builder
+
+ARG ZNUNY_VERSION=6.1.1
+
+RUN gem install bashly
+
+COPY ./znuny/ /tmp
+
+WORKDIR /tmp/
+
+RUN bashly generate --env production
+
+FROM debian:stable-slim
+
+ARG ZNUNY_VERSION=6.1.1
+ARG ZNUNY_CHECKSUM=16ef499abaffdfa7405c8b38b3ee7c03
 
 WORKDIR /opt/otrs
 
@@ -52,11 +67,9 @@ RUN apt-get update && apt-get install -y \
 
 RUN cpanm install Jq
 
-# RUN wget https://packages.debian.org/source/bullseye/libdbd-oracle-perl -O /tmp/libdbd-oracle-perl \
-#   && dpkg -i /tmp/libdbd-oracle-perl
+COPY --from=builder /tmp/zcli /usr/bin/
 
-COPY ./znuny/zcli.ini /etc/zcli/zcli.ini
-COPY ./znuny/zcli /usr/bin/zcli
+RUN /usr/bin/zcli download -r ${ZNUNY_VERSION} -s ${ZNUNY_CHECKSUM}
 
 EXPOSE 80
 

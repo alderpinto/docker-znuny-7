@@ -17,23 +17,23 @@ spec:
               - configMapRef:
                 name: <name of the configmap>
           command: [
-                        "sh",
-                        "-c",
-                        "zcli",
-                        "migration", 
-                        "database", 
-                        "pgsql",
-                        "-h",
-                        "host",
-                        "-p",
-                        "port",
-                        "-n", 
-                        "name",
-                        "-u",
-                        "user",
-                        "-w",
-                        "password"
-                        ]
+                      "sh",
+                      "-c",
+                      "zcli",
+                      "migration", 
+                      "database", 
+                      "pgsql",
+                      "-h",
+                      "host",
+                      "-p",
+                      "port",
+                      "-n", 
+                      "name",
+                      "-u",
+                      "user",
+                      "-w",
+                      "password"
+                      ]
       restartPolicy: Never
 ```
 

@@ -1,3 +1,6 @@
+CONFIG_ZNUNY_VERSION=${args[-r]}
+CONFIG_ZNUNY_CHECKSUM=${args[-s]}
+
 DESTINATION="/tmp/znuny-${CONFIG_ZNUNY_VERSION}.tar.gz"
 
 customLogger "info" "download" "Download the version ${CONFIG_ZNUNY_VERSION} of the archive of Znuny"

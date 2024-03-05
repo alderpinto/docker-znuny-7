@@ -1,6 +1,6 @@
 name: zcli
 help: Simple cli to manage the container of znuny
-version: 6.5.3-3
+version: 6.1.1
 
 environment_variables:
   - name: ZNUNY_LOG_PATH
@@ -107,9 +107,6 @@ environment_variables:
     help: Agents authentication synchronization
 
 commands:
-  # - name: dev
-  #   help: Development command to test features
-  #
   - name: config
     help: Manage the configuration of znuny
     expose: true
@@ -138,6 +135,16 @@ commands:
 
   - name: download
     help: Download the znuny archive
+    flags:
+      - short: -r
+        arg: release
+        required: true
+        help: Release version of Znuny
+      - short: -s
+        arg: signature
+        required: true
+        help: Checksum signature of the Znuny release
+
 
   - name: init
     help: Initialize the container

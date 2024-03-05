@@ -28,7 +28,8 @@ nav:
     - Development: znuny/development
   - Helm:
     - Overview: helm/overview
-    - Deployment: helm/deployment
+    - Installation: helm/installation
+    - Parameters: helm/parameters
     - Development: helm/development
   - Kubernetes:
     - Migration: kubernetes/migration.md

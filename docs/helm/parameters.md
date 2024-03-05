@@ -1,8 +1,3 @@
-## Configurations
-
-By default, Helm deployment is configured via a value file.  
-This file can be found in the [Github repository](https://github.com/FR-BEZ-AOSC/docker-znuny/blob/main/helm/values.yaml).
-
 ### Helm release configurations
 
 | Option                                               | Default                                              | Description |

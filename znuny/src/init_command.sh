@@ -1,5 +1,3 @@
-zcli download
-
 zcli user system
 
 zcli config znuny
@@ -18,8 +16,4 @@ zcli check config
 
 zcli user admin
 
-# # zcli dev
-
 zcli run znuny
-
-# sleep 1000000
