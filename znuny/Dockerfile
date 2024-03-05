@@ -12,6 +12,8 @@ RUN bashly generate --env production
 
 FROM debian:stable-slim
 
+LABEL org.opencontainers.image.source = "https://github.com/FR-BEZ-AOSC/docker-znuny"
+
 ARG ZNUNY_VERSION=6.1.1
 ARG ZNUNY_CHECKSUM=16ef499abaffdfa7405c8b38b3ee7c03
 
