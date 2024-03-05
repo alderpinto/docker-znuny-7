@@ -1,41 +1,49 @@
+---
 version: "3"
 
-# networks:
-#   net:
-#     driver: bridge
-#     ipam:
-#       config:
-#         - subnet: 172.30.0.0/24
+networks:
+  net:
+
+volumes:
+  pgsql:
 
 services:
-  znuny:
-    # networks:
-    #   net:
-    #     ipv4_address: 172.30.0.11
-    extends:
-      file: compose/znuny.yaml
-      service: znuny
-
-  mariadb:
-    # networks:
-    #   net:
-    #     ipv4_address: 172.30.0.12
-    extends:
-      file: compose/mariadb.yaml
-      service: mariadb
-      
-  postgresql:
-    # networks:
-    #   net:
-    #     ipv4_address: 172.30.0.13
-    extends:
-      file: compose/postgresql.yaml
-      service: postgresql
-
-  bkp-pgsql:
-    # networks:
-    #   net:
-    #     ipv4_address: 172.30.0.13
-    extends:
-      file: compose/postgresql.yaml
-      service: bkp-pgsql
+  app:
+    image: ghcr.io/fr-bez-aosc/znuny:latest
+    container_name: znuny
+    networks:
+      - net
+    ports:
+      - 8080:80
+    depends_on:
+      - db
+    environment:
+      ZNUNY_DATABASE_TYPE: pgsql
+      ZNUNY_DATABASE_HOST: postgresql
+      ZNUNY_DATABASE_PORT: 5432
+      ZNUNY_DATABASE_NAME: znuny
+      ZNUNY_DATABASE_USER: znuny
+      ZNUNY_DATABASE_PASSWORD: password
+  db:
+    image: postgres:13
+    container_name: postgresql
+    networks:
+      - net
+    volumes:
+      - pgsql:/var/lib/postgresql/data/pgdata
+    environment:
+      PGDATA: /var/lib/postgresql/data/pgdata
+      POSTGRES_DB: znuny
+      POSTGRES_USER: znuny
+      POSTGRES_PASSWORD: password
+  ldap:
+    image: bitnami/openldap:2
+    container_name: openldap
+    networks:
+      - net
+    environment:
+      LDAP_ADMIN_USERNAME: admin
+      LDAP_ADMIN_PASSWORD: password
+      LDAP_ROOT: dc=domain,dc=tld
+      LDAP_USERS: znuny,operator
+      LDAP_PASSWORDS: password,password
