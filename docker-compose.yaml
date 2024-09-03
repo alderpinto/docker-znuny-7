@@ -5,7 +5,7 @@ services:
 ###Usuário: root@localhost
 ###Senha: cXldfmKMtLAT4FGD
   znuny:
-    image: alderpinto/znuny-lts:6.5.6
+    image: alderpinto/znuny-lts:6.3.4
     restart: always
     container_name: znuny
     ports:

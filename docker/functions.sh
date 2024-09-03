@@ -335,13 +335,13 @@ function load_defaults() {
         #Check that a backup isn't being restored
         if [ "$ZNUNY_INSTALL" == "no" ]; then
           print_info "Loading default db schemas..."
-          $mysqlcmd ${ZNUNY_DB_NAME} < ${ZNUNY_ROOT}/scripts/database/schema.mysql.sql
+          $mysqlcmd ${ZNUNY_DB_NAME} < ${ZNUNY_ROOT}/scripts/database/otrs-schema.mysql.sql
           [ $? -gt 0 ] && print_error "\n\e[1;31mERROR:\e[0m Couldn't load schema.mysql.sql schema !!\n" && exit 1
           print_info "Loading initial db inserts..."
-          $mysqlcmd ${ZNUNY_DB_NAME} < ${ZNUNY_ROOT}/scripts/database/initial_insert.mysql.sql
+          $mysqlcmd ${ZNUNY_DB_NAME} < ${ZNUNY_ROOT}/scripts/database/otrs-initial_insert.mysql.sql
           [ $? -gt 0 ] && print_error "\n\e[1;31mERROR:\e[0m Couldn't load OTRS database initial inserts !!\n" && exit 1
           print_info "Loading initial schema constraints..."
-          $mysqlcmd ${ZNUNY_DB_NAME} < ${ZNUNY_ROOT}/scripts/database/schema-post.mysql.sql
+          $mysqlcmd ${ZNUNY_DB_NAME} < ${ZNUNY_ROOT}/scripts/database/otrs-schema-post.mysql.sql
           [ $? -gt 0 ] && print_error "\n\e[1;31mERROR:\e[0m Couldn't load schema-post.mysql.sql schema !!\n" && exit 1
         fi
       else
@@ -357,13 +357,13 @@ function load_defaults() {
         if [ "$ZNUNY_INSTALL" == "no" ]; then
           psqldbcmd="psql postgresql://${ZNUNY_DB_USER}:${ZNUNY_DB_PASSWORD}@${ZNUNY_DB_HOST}:${ZNUNY_DB_PORT}/${ZNUNY_DB_NAME} " 
           print_info "Loading default db schemas..."
-          $psqldbcmd < ${ZNUNY_ROOT}/scripts/database/schema.postgresql.sql
+          $psqldbcmd < ${ZNUNY_ROOT}/scripts/database/otrs-schema.postgresql.sql
           [ $? -gt 0 ] && print_error "\n\e[1;31mERROR:\e[0m Couldn't load schema.postgresql.sql schema !!\n" && exit 1
           print_info "Loading initial db inserts..."
-          $psqldbcmd < ${ZNUNY_ROOT}/scripts/database/initial_insert.postgresql.sql
+          $psqldbcmd < ${ZNUNY_ROOT}/scripts/database/otrs-initial_insert.postgresql.sql
           [ $? -gt 0 ] && print_error "\n\e[1;31mERROR:\e[0m Couldn't load OTRS database initial inserts !!\n" && exit 1
           print_info "Loading initial schema constraints..."
-          $psqldbcmd < ${ZNUNY_ROOT}/scripts/database/schema.postgresql.sql
+          $psqldbcmd < ${ZNUNY_ROOT}/scripts/database/otrs-schema-post.postgresql.sql
           [ $? -gt 0 ] && print_error "\n\e[1;31mERROR:\e[0m Couldn't load schema.postgresql.sql schema !!\n" && exit 1
         fi
       else

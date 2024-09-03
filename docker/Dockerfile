@@ -1,13 +1,13 @@
 FROM nginx:1.23.4-alpine3.17-perl
 LABEL maintainer="Alder Pinto <alder.pinto@gmail.com>"
-ENV ZNUNY_VERSION=6.5.6
-ENV ZNUNY_VERSION_ITSM=6.5.2
-ENV ZNUNY_VERSION_PRIMARYSECONDARY=6.5.2
-ENV ZNUNY_VERSION_SURVEY=6.5.1
-ENV ZNUNY_VERSION_FAQ=6.5.2
-ENV ZNUNY_VERSION_CLONEDB=6.5.2
+ENV ZNUNY_VERSION=6.3.4
+ENV ZNUNY_VERSION_ITSM=6.3.3
+ENV ZNUNY_VERSION_PRIMARYSECONDARY=6.3.2
+ENV ZNUNY_VERSION_SURVEY=6.3.1
+ENV ZNUNY_VERSION_FAQ=6.3.2
+ENV ZNUNY_VERSION_CLONEDB=6.3.1
 
-ENV ZNUNY_ROOT "/opt/otrs"
+ENV ZNUNY_ROOT="/opt/otrs"
 
 #WORKDIR /opt
 
@@ -27,7 +27,7 @@ perl-spreadsheet-xlsx perl-ldap perl-net-dns perl-authen-ntlm perl-mail-imapclie
 perl-json-xs perl-data-uuid perl-datetime perl-date-format perl-crypt-jwt perl-crypt-openssl-x509 \
 perl-css-minifier-xs perl-dbd-pg perl-dbd-mysql perl-dbd-odbc perl-javascript-minifier-xs \
 perl-encode-hanextra perl-data-optlist perl-io-gzip perl-pathtools perl-scalar-list-utils && \
-cpanm CGI::Compile Plack::Middleware::Expires Plack::Middleware::Session::Cookie
+cpanm CGI::Compile Plack::Middleware::Expires Plack::Middleware::Session::Cookie Captcha::reCAPTCHA
 
 RUN wget https://download.znuny.org/releases/znuny-${ZNUNY_VERSION}.tar.gz && \
 #mkdir ${ZNUNY_ROOT} && \
@@ -35,10 +35,11 @@ tar xfz znuny-${ZNUNY_VERSION}.tar.gz -C /opt && \
 mv /opt/znuny-${ZNUNY_VERSION} ${ZNUNY_ROOT} && \
 mkdir ${ZNUNY_ROOT}/addons && \
 wget https://download.znuny.org/releases/itsm/bundle6x/ITSM-${ZNUNY_VERSION_ITSM}.opm -P ${ZNUNY_ROOT}/addons/ && \
-wget https://download.znuny.org/releases/packages/Znuny-PrimarySecondary-${ZNUNY_VERSION_PRIMARYSECONDARY}.opm -P ${ZNUNY_ROOT}/addons/ && \
+wget https://download.znuny.org/releases/packages/OTRSMasterSlave-${ZNUNY_VERSION_PRIMARYSECONDARY}.opm -P ${ZNUNY_ROOT}/addons/ && \
+#wget https://download.znuny.org/releases/packages/Znuny-PrimarySecondary-${ZNUNY_VERSION_PRIMARYSECONDARY}.opm -P ${ZNUNY_ROOT}/addons/ && \
 wget https://download.znuny.org/releases/packages/Survey-${ZNUNY_VERSION_SURVEY}.opm -P ${ZNUNY_ROOT}/addons/ && \
 wget https://download.znuny.org/releases/packages/FAQ-${ZNUNY_VERSION_FAQ}.opm -P ${ZNUNY_ROOT}/addons/ && \
-wget https://download.znuny.org/releases/packages/CloneDB-${ZNUNY_VERSION_CLONEDB}.opm -P ${ZNUNY_ROOT}/addons/ 
+wget https://download.znuny.org/releases/packages/OTRSCloneDB-${ZNUNY_VERSION_CLONEDB}.opm -P ${ZNUNY_ROOT}/addons/ 
 
 RUN adduser -h ${ZNUNY_ROOT} -G nginx -s /bin/sh -H -D otrs && \
 ${ZNUNY_ROOT}/bin/otrs.SetPermissions.pl --otrs-user=otrs --web-group=nginx && \
