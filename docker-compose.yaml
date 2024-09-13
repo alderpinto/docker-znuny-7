@@ -5,9 +5,8 @@ services:
 ###Usuário: root@localhost
 ###Senha: cXldfmKMtLAT4FGD
   znuny:
-    image: alderpinto/znuny-lts:6.5.6
+    image: alderpinto/znuny-lts:6.5.9
     restart: always
-    container_name: znuny
     ports:
 #      - 443:443
       - 8880:8880
@@ -24,14 +23,10 @@ services:
 ###Usuário: otrs
 ###Senha: G9MB0dCQ72wlnHpu  
     image: postgres:15
-    container_name: postgres
     restart: always
     environment:
       POSTGRES_USER: root
       POSTGRES_PASSWORD: mjeffomybyov7xffcba6
       PGDATA: "/var/lib/postgresql/data/pgdata"
     volumes:
-      - postgres:/var/lib/postgresql/data
-
-volumes:
-  postgres:
+      - ./postgres:/var/lib/postgresql/data

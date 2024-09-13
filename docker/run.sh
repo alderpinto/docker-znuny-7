@@ -25,6 +25,7 @@ if [ -d "$VOLUME_DIR" ]; then
         fi          
     fi
     install_modules ${ZNUNY_ADDONS_PATH}
+    ${ZNUNY_ROOT}/bin/otrs.SetPermissions.pl --otrs-user=otrs --web-group=nginx
 fi
 
 /usr/bin/supervisord -c /etc/supervisord.conf&
