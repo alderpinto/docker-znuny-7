@@ -9,7 +9,7 @@ services:
     restart: always
     ports:
 #      - 443:443
-      - 8880:8880
+      - 8081:8880
       - 8881:8881
     env_file: .env      
     volumes:
