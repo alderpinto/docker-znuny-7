@@ -5,12 +5,13 @@ services:
 ###Usuário: root@localhost
 ###Senha: GVYskvEXNPxLcu4V
   znuny:
-    image: alderpinto/znuny:7.0.19
+    #build: ./docker/
+    image: docker-znuny-rel-7_0_19-znuny
     restart: always
-    container_name: znuny
+    #container_name: znuny
     ports:
-      - 8880:8880
-      - 8881:8881
+      - 8380:8880
+      - 8381:8881
     env_file: .env      
     volumes:
       - ./init:/app
