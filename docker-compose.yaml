@@ -5,33 +5,35 @@ services:
 ###Usuário: root@localhost
 ###Senha: GVYskvEXNPxLcu4V
   znuny:
-    image: alderpinto/znuny:7.0.8
+    image: alderpinto/znuny:7.0.19
     restart: always
     container_name: znuny
     ports:
-#      - 443:443
       - 8880:8880
       - 8881:8881
     env_file: .env      
     volumes:
-#      - ./letsencrypt:/etc/letsencrypt
-#      - ./Config.pm:/opt/otrs/Kernel/Config.pm
       - ./init:/app
       - ./app:/opt/znuny
     depends_on:
-      - postgres
-  postgres:
-###Usuário: znuny
-###Senha: QNq6ieatFB9i2niW  
-    image: postgres:15
-    container_name: postgres
+      - db
+    networks: 
+      - otrs      
+  db:
+    image: mariadb:10.11.3
     restart: always
     environment:
-      POSTGRES_USER: root
-      POSTGRES_PASSWORD: mjeffomybyov7xffcba6
-      PGDATA: "/var/lib/postgresql/data/pgdata"
+      MARIADB_USER: otrs
+      MARIADB_PASSWORD: jurema
+      MARIADB_DATABASE: otrs
+      MARIADB_ROOT_PASSWORD: jurema
+    ports:
+      - 3306:3306
     volumes:
-      - postgres:/var/lib/postgresql/data
-
-volumes:
-  postgres:
+      - ./mysql:/var/lib/mysql
+      - ./db/conf/50-znuny_config.cnf:/etc/mysql/mariadb.conf.d/50-znuny_config.cnf
+    networks: 
+      - otrs
+networks:
+  otrs:
+    driver: bridge
