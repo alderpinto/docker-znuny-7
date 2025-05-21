@@ -1,1 +1,0 @@
-zcli job migration --help

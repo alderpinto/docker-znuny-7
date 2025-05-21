@@ -1,1 +1,0 @@
-zcli run --help

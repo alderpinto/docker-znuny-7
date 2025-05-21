@@ -9,15 +9,24 @@ volumes:
 
 services:
   app:
-    image: ghcr.io/fr-bez-aosc/znuny:beta-6.1.1
+    build:
+      context: .
+      dockerfile: ./znuny/7.1.7/Dockerfile
+    image: alder.pinto/znuny:7.1.7
     container_name: znuny
     environment:
-      ZNUNY_TIMEZONE: Europe/Paris
+      ZNUNY_TIMEZONE: America/Sao_Paulo
       ZNUNY_DATABASE_HOST: postgresql
       ZNUNY_DATABASE_PORT: 5432
       ZNUNY_DATABASE_NAME: znuny
       ZNUNY_DATABASE_USER: znuny
       ZNUNY_DATABASE_PASSWORD: password
+      POSTGRESQL_POSTGRES_PASSWORD: password
+      POSTGRESQL_POSTGRES_USER: postgres
+    volumes:
+      - ./App:/opt/znuny   
+      - ./Backup:/backup
+      - ./Addons:/addons
     networks:
       - net
     ports:
@@ -25,7 +34,7 @@ services:
     depends_on:
       - db
   db:
-    image: bitnami/postgresql:16
+    image: bitnami/postgresql:17
     container_name: postgresql
     user: root
     environment:
