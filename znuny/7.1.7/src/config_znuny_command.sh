@@ -80,5 +80,5 @@ if [[ -z ${ZNUNY_SETTINGS_FILE} ]]; then
   gen_add_end
 else
   customLogger "info" "config_znuny" "Create the configuration file from a single variable"
-  echo -e ${ZNUNY_SETTINGS_FILE} > ${CONFIG_PATH}
+  cat ${ZNUNY_SETTINGS_FILE} > ${CONFIG_PATH}
 fi

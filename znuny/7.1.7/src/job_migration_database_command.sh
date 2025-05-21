@@ -1,4 +1,4 @@
-DUMP_FILE="/backup/znuny-db-dump.sql"
+DUMP_FILE="${ZNUNY_RESTOREDB_FILE}"
 
 TMP_LOCK_FILE="/tmp/migration_database.lock"
 

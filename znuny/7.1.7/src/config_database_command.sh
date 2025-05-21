@@ -29,6 +29,9 @@ else
                         "${ZNUNY_DATABASE_NAME:-$DEFAULT_ZNUNY_DATABASE_NAME}" \
                         "${ZNUNY_DATABASE_USER:-$DEFAULT_ZNUNY_DATABASE_USER}" \
                         "${ZNUNY_DATABASE_PASSWORD:-$DEFAULT_ZNUNY_DATABASE_PASSWORD}"
-  fi
+  else
+    customLogger "info" "config_database" "Database will be restored from backup file."
+    exit 1
+  fi    
 fi
 
