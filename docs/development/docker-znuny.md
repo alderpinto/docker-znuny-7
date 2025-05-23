@@ -34,7 +34,7 @@ services:
     depends_on:
       - db
   db:
-    image: bitnami/postgresql:16
+    image: bitnami/postgresql:17
     container_name: postgresql
     user: root
     environment:

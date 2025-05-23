@@ -56,3 +56,8 @@
     * `Descrição`: Fornece uma chave para acessar o monitoramento de saúde da aplicação.  
     * `Necessidade`: Autentica o uso dos recursos de monitoramento de status do sistema.  
     * `Função`: Permite acesso seguro às ferramentas de monitoramento da aplicação.  
+
+* `ZNUNY_RESTOREDB_FILE`: Path do arquivo que contém os dados para serem restaurados.  
+    * `Descrição`: Caminho para o arquivo de backup contendo os dados do banco do Znuny.
+    * `Necessidade`: Necessário para restaurar dados do Znuny a partir de um backup.
+    * `Função`: Indica qual arquivo deve ser usado no processo de restauração do banco.

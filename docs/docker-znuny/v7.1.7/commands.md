@@ -73,6 +73,9 @@ Há diversos comandos principais que podem ser executados:
     * `migration`: Migra banco PostgreSQL existente.
     * `database`: Especifica host, porta, nome, usuário e senha da base de dados.
     * `local`: Migra via dump local com argumento `path`.
+    * `defaultdb`: Restaurar um banco de dados existente a partir de um arquivo de dump no sistema de arquivos local.
+    * `backup`: Fazer backup de um banco de dados existente a partir de um servidor PostgreSQL.
+    * `restore`: Reataura um backup de um banco de dados existente a partir de um arquivo DUMP.
 
 * `run`: *Executar componentes do Znuny*
     * `apache2`: Inicia o servidor web Apache2.
