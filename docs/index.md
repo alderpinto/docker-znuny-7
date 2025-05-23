@@ -4,9 +4,6 @@
     Esta documentação está em desenvolvimento, assim como o projeto ao qual se refere.  
     Alguns elementos podem estar faltando, em excesso, ou precisar de modificação ou esclarecimento.  
 
-    Em caso de problemas ou solicitações,  
-    é possível abrir uma [issue](https://github.com/FR-BEZ-AOSC/docker-znuny/issues "Ir para issues") :material-information-outline:{ title="Como o docker-znuny é um projeto paralelo, pouco tempo é dedicado a ele" }
-
 ## Design
 
 O objetivo deste projeto, centrado na aplicação Znuny, é fornecer uma imagem de contêiner confiável e de alto desempenho para uma liberação rápida e fácil em produção.

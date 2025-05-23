@@ -19,7 +19,7 @@ Esses recursos são os seguintes:
 
     services:
       app:
-        image: ghcr.io/fr-bez-aosc/znuny:beta-6.1.1
+        image: dockerhub.camara.leg.br/dockerhub/library/znuny:7.1.7
         container_name: znuny
         ports:
           - 8080:80
@@ -47,7 +47,7 @@ Cada recurso, portanto, possui uma variável capaz de ativá-lo ou desativá-lo 
 
     services:
       app:
-        image: ghcr.io/fr-bez-aosc/znuny:beta-6.1.1
+        image: dockerhub.camara.leg.br/dockerhub/library/znuny:7.1.7
         container_name: znuny
         ports:
         - 8080:80
