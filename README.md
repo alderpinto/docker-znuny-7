@@ -1,5 +1,5 @@
 # docker-znuny
 
-A simple, fast and performant deployment of the application Znuny
+Uma implantação simples, rápida e com bom desempenho da aplicação Znuny
 
-Read the documentation [here](https://docker-znuny.aosc-portal.com/)
+Leia a documentação.
